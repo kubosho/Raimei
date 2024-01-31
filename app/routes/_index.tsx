@@ -3,6 +3,7 @@ import { useAtomValue } from 'jotai/react';
 
 import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
 import LoginForm from '../features/auth/components/LoginForm';
+import LogoutButton from '../features/auth/components/LogoutButton';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }];
@@ -34,6 +35,7 @@ export default function Index() {
       </ul>
 
       {session == null ? <LoginForm onSubmit={() => {}} /> : <></>}
+      {session != null ? <LogoutButton onClick={() => {}} /> : <></>}
     </div>
   );
 }
