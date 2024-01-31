@@ -1,13 +1,20 @@
 import type { MetaFunction } from '@remix-run/node';
+import { useAtomValue } from 'jotai/react';
+
+import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
+import LoginForm from '../features/auth/components/LoginForm';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'New Remix App' }, { name: 'description', content: 'Welcome to Remix!' }];
 };
 
 export default function Index() {
+  const session = useAtomValue(userSessionAtom);
+
   return (
     <div style={{ fontFamily: 'system-ui, sans-serif', lineHeight: '1.8' }}>
       <h1>Welcome to Remix</h1>
+
       <ul>
         <li>
           <a target="_blank" href="https://remix.run/tutorials/blog" rel="noreferrer">
@@ -25,6 +32,8 @@ export default function Index() {
           </a>
         </li>
       </ul>
+
+      {session == null ? <LoginForm onSubmit={() => {}} /> : <></>}
     </div>
   );
 }
