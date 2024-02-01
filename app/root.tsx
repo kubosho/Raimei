@@ -59,9 +59,7 @@ export default function App() {
   const retriveCurrentSession = useCallback(async () => {
     const { data } = await auth.retriveSession();
 
-    if (data.session != null) {
-      setSession(data.session);
-    }
+    setSession(data.session);
   }, [auth, setSession]);
 
   useEffect(() => {
