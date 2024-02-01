@@ -31,14 +31,19 @@ export default function LoginForm({ onSubmit }: Props) {
 
   return (
     <form onSubmit={handleFormSubmit}>
-      <label>
-        Email
-        <input type="email" name="email" id="email" autoComplete="email" />
-      </label>
-      <label>
-        Password
-        <input type="password" name="password" id="password" autoComplete="current-password" />
-      </label>
+      <label htmlFor="email">Email</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        defaultValue=""
+        autoCapitalize="none"
+        autoCorrect="off"
+        autoComplete="email"
+        spellCheck={false}
+      />
+      <label htmlFor="password">Password</label>
+      <input type="password" name="password" id="password" defaultValue="" autoComplete="current-password" />
       <button type="submit">Login</button>
     </form>
   );
