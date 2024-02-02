@@ -1,4 +1,3 @@
-import { cssBundleHref } from '@remix-run/css-bundle';
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
 import {
   Links,
@@ -20,8 +19,9 @@ import { Database } from '../types/database.types';
 import { useInstance } from './common_hooks/use_instance';
 import { Auth } from './features/auth';
 import { userSessionAtom } from './features/auth/atoms/user_session_atom';
+import stylesheet from './tailwind.css';
 
-export const links: LinksFunction = () => [...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : [])];
+export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const env = {
