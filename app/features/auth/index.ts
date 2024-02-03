@@ -1,4 +1,4 @@
-import type { AuthChangeEvent, AuthError, Session, Subscription } from '@supabase/supabase-js';
+import type { AuthChangeEvent, AuthError, AuthTokenResponsePassword, Session, Subscription } from '@supabase/supabase-js';
 import type { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
 
 interface LoginParams {
@@ -44,8 +44,8 @@ export class Auth {
     this._client = client;
   }
 
-  async login({ email, password }: LoginParams): Promise<void> {
-    await this._client.signInWithPassword({
+  async login({ email, password }: LoginParams): Promise<AuthTokenResponsePassword> {
+    return await this._client.signInWithPassword({
       email,
       password,
     });
