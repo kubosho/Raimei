@@ -1,11 +1,12 @@
 import { useOutletContext } from '@remix-run/react';
+import type { AuthTokenResponsePassword } from '@supabase/supabase-js';
 import { useCallback } from 'react';
 import type { FormEvent } from 'react';
 
 import type { Auth } from '..';
 
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (response: AuthTokenResponsePassword) => void;
 }
 
 export default function LoginForm({ onSubmit }: Props) {
@@ -19,12 +20,12 @@ export default function LoginForm({ onSubmit }: Props) {
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      await auth.login({
+      const authTokenResponse = await auth.login({
         email,
         password,
       });
 
-      onSubmit();
+      onSubmit(authTokenResponse);
     },
     [auth, onSubmit],
   );
