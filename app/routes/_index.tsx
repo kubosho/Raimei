@@ -24,7 +24,7 @@ export default function Index() {
       <div className="max-w-screen-md mx-auto">
         <TitleEditor />
       </div>
-      <div className="max-w-screen-md mx-auto">
+      <div className="max-w-screen-md mt-10 mx-auto">
         <TextEditor />
       </div>
       {session == null ? <LoginForm onSubmit={() => {}} /> : <></>}
