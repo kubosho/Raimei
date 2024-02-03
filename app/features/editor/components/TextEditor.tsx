@@ -12,6 +12,7 @@ import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
 import type { LexicalEditor } from 'lexical';
 
 import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
+import { textEditorThemeConfig } from '../text_editor_theme_config';
 
 const { CodeNode } = CodePkg;
 const { LinkNode } = LinkPkg;
@@ -32,6 +33,7 @@ const initialConfig: InitialConfigType = {
   onError: (error: Error, editor: LexicalEditor) => {
     console.error(error, editor);
   },
+  theme: textEditorThemeConfig,
 };
 
 export default function TextEditor() {
