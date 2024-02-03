@@ -16,19 +16,21 @@ export default function Index() {
   const session = useAtomValue(userSessionAtom);
 
   return (
-    <div>
+    <>
       <h1 className="items-center flex max-w-screen-md mx-auto text-gray-900">
         <ThunderSvg alt="" className="fill-yellow-500 h-4 w-4" />
         <span className="ml-1">Raimei</span>
       </h1>
-      <div className="max-w-screen-md mx-auto">
-        <TitleEditor />
-      </div>
-      <div className="max-w-screen-md mt-10 mx-auto">
-        <TextEditor />
-      </div>
-      {session == null ? <LoginForm onSubmit={() => {}} /> : <></>}
-      {session != null ? <LogoutButton onClick={() => {}} /> : <></>}
-    </div>
+      <main>
+        <div className="max-w-screen-md mx-auto">
+          <TitleEditor />
+        </div>
+        <div className="max-w-screen-md mt-10 mx-auto">
+          <TextEditor />
+        </div>
+        {session == null ? <LoginForm onSubmit={() => {}} /> : <></>}
+        {session != null ? <LogoutButton onClick={() => {}} /> : <></>}
+      </main>
+    </>
   );
 }
