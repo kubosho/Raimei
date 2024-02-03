@@ -6,6 +6,7 @@ import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
 import LoginForm from '../features/auth/components/LoginForm';
 import LogoutButton from '../features/auth/components/LogoutButton';
 import TextEditor from '../features/editor/components/TextEditor';
+import TitleEditor from '../features/editor/components/TitleEditor';
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
@@ -20,6 +21,9 @@ export default function Index() {
         <ThunderSvg alt="" className="fill-yellow-500 h-4 w-4" />
         <span className="ml-1">Raimei</span>
       </h1>
+      <div className="max-w-screen-md mx-auto">
+        <TitleEditor />
+      </div>
       <div className="max-w-screen-md mx-auto">
         <TextEditor />
       </div>
