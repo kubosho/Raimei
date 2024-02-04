@@ -16,6 +16,10 @@ export default function LoginForm({ onSubmit }: Props) {
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (auth == null) {
+        throw new Error('Auth is not initialized. Please reload the page.');
+      }
+
       const formData = new FormData(event.currentTarget);
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
