@@ -95,7 +95,7 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Outlet context={{ auth }} />
+        <Outlet />
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
