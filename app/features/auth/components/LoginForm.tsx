@@ -35,7 +35,7 @@ export default function LoginForm({ onSubmit }: Props) {
   );
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <label htmlFor="email">Email</label>
       <input
         type="email"
