@@ -1,16 +1,16 @@
-import { useOutletContext } from '@remix-run/react';
 import type { AuthTokenResponsePassword } from '@supabase/supabase-js';
+import { useAtomValue } from 'jotai/react';
 import { useCallback } from 'react';
 import type { FormEvent } from 'react';
 
-import type { Auth } from '..';
+import { authAtom } from '../atoms/auth_atom';
 
 interface Props {
   onSubmit: (response: AuthTokenResponsePassword) => void;
 }
 
 export default function LoginForm({ onSubmit }: Props) {
-  const { auth } = useOutletContext<{ auth: Auth }>();
+  const auth = useAtomValue(authAtom);
 
   const handleFormSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
