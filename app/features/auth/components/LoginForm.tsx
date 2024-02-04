@@ -1,36 +1,41 @@
-import { useOutletContext } from '@remix-run/react';
+import type { AuthTokenResponsePassword } from '@supabase/supabase-js';
+import { useAtomValue } from 'jotai/react';
 import { useCallback } from 'react';
 import type { FormEvent } from 'react';
 
-import type { Auth } from '..';
+import { authAtom } from '../atoms/auth_atom';
 
 interface Props {
-  onSubmit: () => void;
+  onSubmit: (response: AuthTokenResponsePassword) => void;
 }
 
 export default function LoginForm({ onSubmit }: Props) {
-  const { auth } = useOutletContext<{ auth: Auth }>();
+  const auth = useAtomValue(authAtom);
 
   const handleFormSubmit = useCallback(
     async (event: FormEvent<HTMLFormElement>) => {
       event.preventDefault();
 
+      if (auth == null) {
+        throw new Error('Auth is not initialized. Please reload the page.');
+      }
+
       const formData = new FormData(event.currentTarget);
       const email = formData.get('email') as string;
       const password = formData.get('password') as string;
 
-      await auth.login({
+      const authTokenResponse = await auth.login({
         email,
         password,
       });
 
-      onSubmit();
+      onSubmit(authTokenResponse);
     },
     [auth, onSubmit],
   );
 
   return (
-    <form onSubmit={handleFormSubmit}>
+    <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <label htmlFor="email">Email</label>
       <input
         type="email"
