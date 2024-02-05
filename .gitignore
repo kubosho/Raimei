@@ -1,6 +1,7 @@
-node_modules
+.cache/
+.vercel/
+build/
+node_modules/
+public/build/
 
-/.cache
-/build
-/public/build
 .env
