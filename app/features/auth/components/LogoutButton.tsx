@@ -27,7 +27,7 @@ export default function LogoutButton({ onClick }: Props) {
   );
 
   return (
-    <button type="button" onClick={handleClick}>
+    <button className="border-2 border-yellow-500 px-4 py-1 rounded text-slate-900" type="button" onClick={handleClick}>
       Logout
     </button>
   );
