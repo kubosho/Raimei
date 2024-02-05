@@ -38,6 +38,7 @@ export default function LoginForm({ onSubmit }: Props) {
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <label htmlFor="email">Email</label>
       <input
+        className="border-b-2 border-slate-500 focus:outline-none py-1"
         type="email"
         name="email"
         id="email"
@@ -47,9 +48,20 @@ export default function LoginForm({ onSubmit }: Props) {
         autoComplete="email"
         spellCheck={false}
       />
-      <label htmlFor="password">Password</label>
-      <input type="password" name="password" id="password" defaultValue="" autoComplete="current-password" />
-      <button type="submit">Login</button>
+      <label className="mt-10" htmlFor="password">
+        Password
+      </label>
+      <input
+        className="border-b-2 border-slate-500 focus:outline-none py-1"
+        type="password"
+        name="password"
+        id="password"
+        defaultValue=""
+        autoComplete="current-password"
+      />
+      <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
+        Login
+      </button>
     </form>
   );
 }
