@@ -16,7 +16,7 @@ export default function LoginButton({ onClick }: Props) {
   );
 
   return (
-    <button type="button" onClick={handleClick}>
+    <button type="button" className="border-2 border-yellow-500 px-4 py-1 rounded text-slate-900" onClick={handleClick}>
       Login
     </button>
   );
