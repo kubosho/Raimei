@@ -25,8 +25,11 @@ export default function Login() {
   );
 
   return (
-    <div className="max-w-screen-md mx-auto">
-      <LoginForm onSubmit={onSubmit} />
-    </div>
+    <section className="max-w-screen-md mt-16 mx-auto">
+      <h2 className="leading-relaxed text-3xl">Login</h2>
+      <div className="mt-10">
+        <LoginForm onSubmit={onSubmit} />
+      </div>
+    </section>
   );
 }
