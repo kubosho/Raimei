@@ -1,10 +1,15 @@
 import { useNavigate } from '@remix-run/react';
+import type { MetaFunction } from '@remix-run/react';
 import type { AuthTokenResponsePassword } from '@supabase/supabase-js';
 import { useSetAtom } from 'jotai/react';
 import { useCallback } from 'react';
 
 import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
 import LoginForm from '../features/auth/components/LoginForm';
+
+export const meta: MetaFunction = () => {
+  return [{ title: 'Login — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
+};
 
 export default function Login() {
   const navigate = useNavigate();
