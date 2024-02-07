@@ -56,19 +56,17 @@ export default function App() {
   const supabase = useInstance(createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY));
   const auth = useInstance(new Auth(supabase.auth));
 
-  const setSession = useSetAtom(userSessionAtom);
-  const setAuth = useSetAtom(authAtom);
+  const setAuthAtom = useSetAtom(authAtom);
+  const setUserSessionAtom = useSetAtom(userSessionAtom);
 
   const retriveCurrentSession = useCallback(async () => {
     const { data } = await auth.retriveSession();
 
-    setSession(data.session);
-  }, [auth, setSession]);
+    setUserSessionAtom(data.session);
+  }, [auth, setUserSessionAtom]);
 
-  useEffect(() => {
-    retriveCurrentSession();
-    setAuth(auth);
-  }, [auth, retriveCurrentSession, setAuth]);
+  retriveCurrentSession();
+  setAuthAtom(auth);
 
   const serverAccessToken = session?.access_token;
 
