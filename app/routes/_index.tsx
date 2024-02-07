@@ -27,10 +27,10 @@ export default function Index() {
     <>
       <Header>{session == null ? <LoginButton onClick={handleClickLoginButton} /> : <AccountMenu />}</Header>
       <main className="mt-16">
-        <div className="max-w-screen-md mx-auto">
+        <div className="max-w-screen-md mx-auto px-2">
           <TitleEditor />
         </div>
-        <div className="max-w-screen-md mt-10 mx-auto">
+        <div className="max-w-screen-md mt-10 mx-auto px-2">
           <TextEditor />
         </div>
       </main>

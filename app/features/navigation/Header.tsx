@@ -9,7 +9,7 @@ interface Props {
 
 export default function Header({ children }: Props) {
   return (
-    <header className="flex items-center justify-between max-w-screen-md mx-auto py-4">
+    <header className="flex items-center justify-between max-w-screen-md mx-auto px-2 py-4">
       <h1 className="py-2">
         <Link className="flex items-center pr-1 text-gray-900" to={{ pathname: '/' }}>
           <ThunderSvg alt="" className="fill-yellow-500 h-4 w-4" />

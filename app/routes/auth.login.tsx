@@ -30,7 +30,7 @@ export default function Login() {
   );
 
   return (
-    <section className="max-w-screen-md mt-16 mx-auto">
+    <section className="max-w-screen-md mx-auto px-2">
       <h2 className="leading-relaxed text-3xl">Login</h2>
       <div className="mt-10">
         <LoginForm onSubmit={onSubmit} />
