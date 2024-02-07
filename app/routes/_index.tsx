@@ -26,11 +26,11 @@ export default function Index() {
   return (
     <>
       <Header>{session == null ? <LoginButton onClick={handleClickLoginButton} /> : <AccountMenu />}</Header>
-      <main className="mt-16">
-        <div className="max-w-screen-md mx-auto px-2">
+      <main className="grid grid-rows-[auto_1fr]">
+        <div className="max-w-screen-md mx-auto px-2 w-full">
           <TitleEditor />
         </div>
-        <div className="max-w-screen-md mt-10 mx-auto px-2">
+        <div className="max-w-screen-md mt-10 mx-auto px-2 w-full">
           <TextEditor />
         </div>
       </main>

@@ -92,7 +92,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body>
+      <body className="gap-16 grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
         <Outlet />
         <ScrollRestoration />
         <Scripts />

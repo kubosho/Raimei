@@ -46,9 +46,9 @@ export default function TextEditor() {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
-      <div className="relative">
+      <div className="h-full relative">
         <RichTextPlugin
-          contentEditable={<ContentEditable className="focus:outline-none" />}
+          contentEditable={<ContentEditable className="focus:outline-none h-full" />}
           placeholder={
             <p className="absolute left-0 pointer-events-none select-none text-gray-500 top-0">Write the texts</p>
           }
