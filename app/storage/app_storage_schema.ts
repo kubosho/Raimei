@@ -5,4 +5,5 @@ export type AppStorageSchema = {
     serviceId: string;
   };
   textEditorState: string;
+  titleEditorState: string;
 };
