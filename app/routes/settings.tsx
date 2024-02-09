@@ -49,44 +49,48 @@ export default function SettingsMicroCms(): JSX.Element {
       <main>
         <section className="max-w-screen-md mx-auto px-2">
           <h2 className="leading-relaxed text-3xl">Settings</h2>
-          <form className="flex flex-col mt-10" onSubmit={handleFormSubmit}>
-            <label htmlFor="serviceId">microCMS service ID</label>
-            <input
-              className="border-b-2 border-slate-500 focus:outline-none py-1"
-              type="text"
-              name="serviceId"
-              id="serviceId"
-              defaultValue={microCmsClientConfig?.serviceId}
-              autoCapitalize="none"
-            />
-            <label className="mt-10" htmlFor="endpoint">
-              microCMS API Endpoint
-            </label>
-            <input
-              className="border-b-2 border-slate-500 focus:outline-none py-1"
-              type="text"
-              name="endpoint"
-              id="endpoint"
-              defaultValue={microCmsClientConfig?.endpoint}
-              autoCapitalize="none"
-              autoCorrect="off"
-            />{' '}
-            <label className="mt-10" htmlFor="apiKey">
-              microCMS API key
-            </label>
-            <input
-              className="border-b-2 border-slate-500 focus:outline-none py-1"
-              type="text"
-              name="apiKey"
-              id="apiKey"
-              defaultValue={microCmsClientConfig?.apiKey}
-              autoCapitalize="none"
-              autoCorrect="off"
-            />
-            <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
-              Submit
-            </button>
-          </form>
+          {session == null ? (
+            <p>Please log in to view settings.</p>
+          ) : (
+            <form className="flex flex-col mt-10" onSubmit={handleFormSubmit}>
+              <label htmlFor="serviceId">microCMS service ID</label>
+              <input
+                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                type="text"
+                name="serviceId"
+                id="serviceId"
+                defaultValue={microCmsClientConfig?.serviceId}
+                autoCapitalize="none"
+              />
+              <label className="mt-10" htmlFor="endpoint">
+                microCMS API Endpoint
+              </label>
+              <input
+                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                type="text"
+                name="endpoint"
+                id="endpoint"
+                defaultValue={microCmsClientConfig?.endpoint}
+                autoCapitalize="none"
+                autoCorrect="off"
+              />{' '}
+              <label className="mt-10" htmlFor="apiKey">
+                microCMS API key
+              </label>
+              <input
+                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                type="text"
+                name="apiKey"
+                id="apiKey"
+                defaultValue={microCmsClientConfig?.apiKey}
+                autoCapitalize="none"
+                autoCorrect="off"
+              />
+              <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
+                Submit
+              </button>
+            </form>
+          )}
         </section>
       </main>
     </>
