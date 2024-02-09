@@ -9,14 +9,18 @@ import ContentEditablePkg from '@lexical/react/LexicalContentEditable.js';
 import HistoryPluginPkg from '@lexical/react/LexicalHistoryPlugin.js';
 import MarkdownShortcutPluginPkg from '@lexical/react/LexicalMarkdownShortcutPlugin.js';
 import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
-import { useAtomValue } from 'jotai/react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
 import type { LexicalEditor } from 'lexical';
+import TurndownService from 'turndown';
 
 import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
+import { useInstance } from '../../../common_hooks/use_instance';
 import { appStorageAtom } from '../../../storage/atoms/app_storage_atom';
 import { AutoResurrectPlugin } from '../plugins/AutoResurrectPlugin';
 import { AutoSavePlugin } from '../plugins/AutoSavePlugin';
+import { HtmlExportPlugin } from '../plugins/HtmlExportPlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';
+import { bodyValueAsMarkdownAtom } from '../atoms/body_value_as_markdown_atom';
 
 const { CodeNode } = CodePkg;
 const { LinkNode } = LinkPkg;
@@ -42,7 +46,21 @@ const initialConfig: InitialConfigType = {
 };
 
 export default function TextEditor() {
+  const turndownService = useInstance(
+    new TurndownService({
+      headingStyle: 'atx',
+      hr: '---',
+    }),
+  );
+
   const appStorage = useAtomValue(appStorageAtom);
+
+  const setBodyValueAsMarkdown = useSetAtom(bodyValueAsMarkdownAtom);
+
+  const exportAsHtml = (contentsAsHTML: string) => {
+    const markdown = turndownService.turndown(contentsAsHTML);
+    setBodyValueAsMarkdown(markdown);
+  };
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -62,6 +80,7 @@ export default function TextEditor() {
           <AutoResurrectPlugin storage={appStorage} />
         </>
       ) : null}
+      <HtmlExportPlugin exportAsHtml={exportAsHtml} />
       <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
     </LexicalComposer>
   );
