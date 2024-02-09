@@ -1,7 +1,7 @@
+import { Link } from '@remix-run/react';
 import { useAtomValue } from 'jotai/react';
 
 import { userSessionAtom } from '../auth/atoms/user_session_atom';
-import LogoutButton from '../auth/components/LogoutButton';
 
 export default function AccountMenu() {
   const session = useAtomValue(userSessionAtom);
@@ -11,8 +11,17 @@ export default function AccountMenu() {
   }
 
   return (
-    <div>
-      <LogoutButton onClick={() => {}} />
-    </div>
+    <ul className="flex">
+      <li>
+        <Link className="p-1" to={{ pathname: '/settings' }}>
+          Settings
+        </Link>
+      </li>
+      <li className="ml-8">
+        <Link className="p-1" to={{ pathname: '/auth/logout' }}>
+          Logout
+        </Link>
+      </li>
+    </ul>
   );
 }
