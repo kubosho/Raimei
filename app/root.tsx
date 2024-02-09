@@ -11,7 +11,8 @@ import {
   useRevalidator,
 } from '@remix-run/react';
 import { createBrowserClient, createServerClient } from '@supabase/auth-helpers-remix';
-import { useSetAtom } from 'jotai/react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
+import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect } from 'react';
 
 import { Database } from '../types/database.types';
@@ -20,6 +21,9 @@ import { useInstance } from './common_hooks/use_instance';
 import { Auth } from './features/auth';
 import { authAtom } from './features/auth/atoms/auth_atom';
 import { userSessionAtom } from './features/auth/atoms/user_session_atom';
+import { microCmsClientAtom } from './features/publish/atoms/micro_cms_client_atom';
+import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
+import { appStorageAtom } from './storage/atoms/app_storage_atom';
 import stylesheet from './tailwind.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
@@ -56,7 +60,12 @@ export default function App() {
   const supabase = useInstance(createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY));
   const auth = useInstance(new Auth(supabase.auth));
 
+  const appStorage = useAtomValue(appStorageAtom);
+  const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
+
   const setAuthAtom = useSetAtom(authAtom);
+  const setMicroCmsClient = useSetAtom(microCmsClientAtom);
+  const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
   const setUserSessionAtom = useSetAtom(userSessionAtom);
 
   const retriveCurrentSession = useCallback(async () => {
@@ -65,8 +74,27 @@ export default function App() {
     setUserSessionAtom(data.session);
   }, [auth, setUserSessionAtom]);
 
+  const createMicroCmsClient = useCallback(async () => {
+    const config = microCmsClientConfig ?? (await appStorage.get('microCmsClientConfig'));
+    if (config == null) {
+      return;
+    }
+
+    if (microCmsClientConfig == null) {
+      setMicroCmsClientConfig(config);
+    }
+
+    const client = createClient({
+      apiKey: config.apiKey,
+      serviceDomain: config.serviceId,
+    });
+
+    setMicroCmsClient(client);
+  }, [appStorage, microCmsClientConfig, setMicroCmsClient, setMicroCmsClientConfig]);
+
   retriveCurrentSession();
   setAuthAtom(auth);
+  createMicroCmsClient();
 
   const serverAccessToken = session?.access_token;
 
