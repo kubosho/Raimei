@@ -3,6 +3,8 @@ export type AppStorageSchema = {
     apiKey: string;
     endpoint: string;
     serviceId: string;
+    // Prevent environment variables set by another user from being entered.
+    userId: string;
   };
   textEditorState: string;
   titleEditorState: string;

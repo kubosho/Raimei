@@ -18,6 +18,10 @@ export default function SettingsMicroCms(): JSX.Element {
   const session = useAtomValue(userSessionAtom);
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    if (session == null) {
+      return;
+    }
+
     event.preventDefault();
 
     const formData = new FormData(event.currentTarget);
@@ -25,14 +29,14 @@ export default function SettingsMicroCms(): JSX.Element {
     const endpoint = formData.get('endpoint') as string;
     const serviceId = formData.get('serviceId') as string;
 
-    const config = { apiKey, endpoint, serviceId };
+    const config = { apiKey, endpoint, serviceId, userId: session.user.id };
     appStorage.set('microCmsClientConfig', config);
     setMicroCmsClientConfig(config);
   };
 
   const loadMicroCmsClientConfig = async () => {
     const config = await appStorage.get('microCmsClientConfig');
-    if (config == null) {
+    if (config == null || session == null || config.userId !== session.user.id) {
       return;
     }
 
