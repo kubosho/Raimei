@@ -34,18 +34,18 @@ export default function SettingsMicroCms(): JSX.Element {
     setMicroCmsClientConfig(config);
   };
 
-  const loadMicroCmsClientConfig = async () => {
-    const config = await appStorage.get('microCmsClientConfig');
-    if (config == null || session == null || config.userId !== session.user.id) {
-      return;
-    }
-
-    setMicroCmsClientConfig(config);
-  };
-
   useEffect(() => {
+    const loadMicroCmsClientConfig = async () => {
+      const config = await appStorage.get('microCmsClientConfig');
+      if (config == null || session == null || config.userId !== session.user.id) {
+        return;
+      }
+
+      setMicroCmsClientConfig(config);
+    };
+
     loadMicroCmsClientConfig();
-  });
+  }, [appStorage, session, setMicroCmsClientConfig]);
 
   return (
     <>
