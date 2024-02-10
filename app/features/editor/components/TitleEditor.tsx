@@ -38,7 +38,7 @@ export default function TitleEditor() {
         name="entry-title"
         id="entry-title"
         value={titleValue}
-        className="focus:outline-none leading-relaxed placeholder-gray-500 text-2xl"
+        className="focus:outline-none leading-relaxed placeholder-gray-500 text-2xl w-full"
         placeholder="Write the title"
         onChange={handleChangeValue}
       />
