@@ -10,7 +10,7 @@ import {
   useLoaderData,
   useRevalidator,
 } from '@remix-run/react';
-import { createBrowserClient, createServerClient } from '@supabase/auth-helpers-remix';
+import { createBrowserClient, createServerClient, parse, serialize } from '@supabase/ssr';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect } from 'react';
@@ -34,9 +34,20 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
   };
   const response = new Response();
+  const cookies = parse(request.headers.get('Cookie') ?? '');
+  const headers = new Headers();
   const supabase = createServerClient(env.SUPABASE_URL, env.SUPABASE_ANON_KEY, {
-    request,
-    response,
+    cookies: {
+      get(key) {
+        return cookies[key];
+      },
+      set(key, value, options) {
+        headers.append('Set-Cookie', serialize(key, value, options));
+      },
+      remove(key, options) {
+        headers.append('Set-Cookie', serialize(key, '', options));
+      },
+    },
   });
   const auth = new Auth(supabase.auth);
 
