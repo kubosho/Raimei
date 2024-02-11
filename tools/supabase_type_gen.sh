@@ -13,4 +13,4 @@ function import_env() {
 
 import_env .env
 
-SUPABASE_ACCESS_TOKEN=$SUPABASE_ACCESS_TOKEN npx supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > ./types/database.types.ts
+SUPABASE_ACCESS_TOKEN=$SUPABASE_ACCESS_TOKEN npx -y supabase gen types typescript --project-id $SUPABASE_PROJECT_ID > ./types/database.types.ts
