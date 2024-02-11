@@ -12,7 +12,7 @@ import {
 } from '@remix-run/react';
 import { createBrowserClient, createServerClient, parse, serialize } from '@supabase/ssr';
 import { useSetAtom } from 'jotai/react';
-import { useCallback, useEffect } from 'react';
+import { useEffect } from 'react';
 
 import { Database } from '../types/database.types';
 
@@ -70,13 +70,7 @@ export default function App() {
   const setAuthAtom = useSetAtom(authAtom);
   const setUserSessionAtom = useSetAtom(userSessionAtom);
 
-  const retriveCurrentSession = useCallback(async () => {
-    const { data } = await auth.retriveSession();
-
-    setUserSessionAtom(data.session);
-  }, [auth, setUserSessionAtom]);
-
-  retriveCurrentSession();
+  setUserSessionAtom(session);
   setAuthAtom(auth);
 
   const serverAccessToken = session?.access_token;
