@@ -1,24 +1,23 @@
 import { useAtom, useAtomValue } from 'jotai/react';
-import { useEffect } from 'react';
 import type { FormEvent } from 'react';
 
+import { supabaseClientAtom } from '../databases/atom/supabase_client_atom';
 import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
 import LoginButton from '../features/auth/components/LoginButton';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
-import { appStorageAtom } from '../storage/atoms/app_storage_atom';
 
 function noop() {}
 
 export default function SettingsMicroCms(): JSX.Element {
   const [microCmsClientConfig, setMicroCmsClientConfig] = useAtom(microCmsClientConfigAtom);
 
-  const appStorage = useAtomValue(appStorageAtom);
+  const supabaseClient = useAtomValue(supabaseClientAtom);
   const session = useAtomValue(userSessionAtom);
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    if (session == null) {
+    if (session == null || supabaseClient == null) {
       return;
     }
 
@@ -30,22 +29,13 @@ export default function SettingsMicroCms(): JSX.Element {
     const serviceId = formData.get('serviceId') as string;
 
     const config = { apiKey, endpoint, serviceId, userId: session.user.id };
-    appStorage.set('microCmsClientConfig', config);
     setMicroCmsClientConfig(config);
+
+    await supabaseClient
+      .from('micro_cms_configs')
+      .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: session.user.id })
+      .select();
   };
-
-  useEffect(() => {
-    const loadMicroCmsClientConfig = async () => {
-      const config = await appStorage.get('microCmsClientConfig');
-      if (config == null || session == null || config.userId !== session.user.id) {
-        return;
-      }
-
-      setMicroCmsClientConfig(config);
-    };
-
-    loadMicroCmsClientConfig();
-  }, [appStorage, session, setMicroCmsClientConfig]);
 
   return (
     <>
@@ -77,7 +67,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 defaultValue={microCmsClientConfig?.endpoint}
                 autoCapitalize="none"
                 autoCorrect="off"
-              />{' '}
+              />
               <label className="mt-10" htmlFor="apiKey">
                 microCMS API key
               </label>
