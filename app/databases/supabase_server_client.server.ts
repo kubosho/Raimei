@@ -4,10 +4,11 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 import type { Database } from '../../types/database.types';
 
 interface Params {
+  accessToken?: string;
   request: Request;
 }
 
-export function createSupabaseServerClient({ request }: Params): SupabaseClient<Database> {
+export function createSupabaseServerClient({ accessToken, request }: Params): SupabaseClient<Database> {
   const { env } = process;
 
   if (env.SUPABASE_ANON_KEY == null || env.SUPABASE_URL == null) {
@@ -28,6 +29,11 @@ export function createSupabaseServerClient({ request }: Params): SupabaseClient<
       },
       remove(key, options) {
         headers.append('Set-Cookie', serialize(key, '', options));
+      },
+    },
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
       },
     },
   });
