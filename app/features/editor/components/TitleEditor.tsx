@@ -1,5 +1,7 @@
+import { Await } from '@remix-run/react';
 import { useAtom, useAtomValue } from 'jotai/react';
-import { useEffect, type ChangeEvent } from 'react';
+import { Suspense, useCallback, useEffect } from 'react';
+import { type ChangeEvent } from 'react';
 
 import { appStorageAtom } from '../../../storage/atoms/app_storage_atom';
 import { titleValueAtom } from '../atoms/title_value_atom';
@@ -16,32 +18,38 @@ export default function TitleEditor() {
     appStorage.set('titleEditorState', value);
   };
 
-  const loadTitleEditorState = async () => {
-    return appStorage.get('titleEditorState');
-  };
-
-  useEffect(() => {
-    loadTitleEditorState().then((titleEditorState) => {
+  const loadTitleEditorState = useCallback(async () => {
+    appStorage.get('titleEditorState').then((titleEditorState) => {
       if (titleEditorState != null) {
         setTitleValue(titleEditorState);
       }
     });
-  });
+  }, [appStorage, setTitleValue]);
+
+  useEffect(() => {
+    loadTitleEditorState();
+  }, [loadTitleEditorState]);
 
   return (
     <>
       <label className="sr-only text-gray-900" htmlFor="entry-title">
         Entry title
       </label>
-      <input
-        type="text"
-        name="entry-title"
-        id="entry-title"
-        value={titleValue}
-        className="focus:outline-none leading-relaxed placeholder-gray-500 text-2xl w-full"
-        placeholder="Write the title"
-        onChange={handleChangeValue}
-      />
+      <Suspense fallback={<div>loading...</div>}>
+        <Await resolve={loadTitleEditorState}>
+          {() => (
+            <input
+              type="text"
+              name="entry-title"
+              id="entry-title"
+              value={titleValue}
+              className="focus:outline-none leading-relaxed placeholder-gray-500 text-2xl w-full"
+              placeholder="Write the title"
+              onChange={handleChangeValue}
+            />
+          )}
+        </Await>
+      </Suspense>
     </>
   );
 }
