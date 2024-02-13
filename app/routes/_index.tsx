@@ -1,11 +1,11 @@
-import type { MetaFunction } from '@remix-run/node';
-import { useNavigate } from '@remix-run/react';
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
+import { json, useLoaderData } from '@remix-run/react';
 import { useAtom, useAtomValue } from 'jotai/react';
 import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect } from 'react';
 
-import LoginButton from '../features/auth/components/LoginButton';
-import { userSessionAtom } from '../features/auth/atoms/user_session_atom';
+import LoginButtonLink from '../features/auth/components/LoginButtonLink';
+import { getSession } from '../features/auth/cookie_session_storage.server';
 import { bodyValueAsMarkdownAtom } from '../features/editor/atoms/body_value_as_markdown_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import SubmitButton from '../features/editor/components/SubmitButton';
@@ -20,15 +20,22 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
 };
 
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get('Cookie'));
+
+  return json({
+    hasSession: session.has('userId'),
+  });
+};
+
 export default function Index() {
-  const navigate = useNavigate();
+  const { hasSession } = useLoaderData<typeof loader>();
 
   const [microCmsClient, setMicroCmsClient] = useAtom(microCmsClientAtom);
 
   const bodyValueAsMarkdown = useAtomValue(bodyValueAsMarkdownAtom);
   const titleValue = useAtomValue(titleValueAtom);
   const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
-  const session = useAtomValue(userSessionAtom);
 
   const createMicroCmsClient = useCallback(() => {
     const config = microCmsClientConfig;
@@ -42,10 +49,6 @@ export default function Index() {
     });
     setMicroCmsClient(client);
   }, [microCmsClientConfig, setMicroCmsClient]);
-
-  const handleClickLoginButton = () => {
-    navigate({ pathname: '/auth/login' });
-  };
 
   const handleClickSubmitButton = async () => {
     if (microCmsClientConfig == null || microCmsClient == null) {
@@ -67,7 +70,7 @@ export default function Index() {
 
   return (
     <>
-      <Header>{session == null ? <LoginButton onClick={handleClickLoginButton} /> : <AccountMenu />}</Header>
+      <Header>{hasSession ? <AccountMenu /> : <LoginButtonLink />}</Header>
       <main className="grid grid-rows-[auto_1fr]">
         <div className="max-w-screen-md mx-auto px-2 w-full">
           <TitleEditor />
