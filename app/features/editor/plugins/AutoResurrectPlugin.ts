@@ -2,12 +2,12 @@ import type { KvsLocalStorage } from '@kvs/node-localstorage';
 import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.js';
 import { useCallback, useEffect } from 'react';
 
-import type { AppStorageSchema } from '../../../storage/app_storage_schema';
+import { EditorStorageSchema } from '../../../storage/editor_storage_schema';
 
 const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 
 interface Params {
-  storage: KvsLocalStorage<AppStorageSchema>;
+  storage: KvsLocalStorage<EditorStorageSchema>;
 }
 
 export function AutoResurrectPlugin({ storage }: Params) {

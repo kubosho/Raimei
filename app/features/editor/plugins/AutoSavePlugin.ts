@@ -3,12 +3,12 @@ import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.
 import { useCallback, useEffect } from 'react';
 import { EditorState } from 'lexical';
 
-import type { AppStorageSchema } from '../../../storage/app_storage_schema';
+import { EditorStorageSchema } from '../../../storage/editor_storage_schema';
 
 const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 
 interface Params {
-  storage: KvsLocalStorage<AppStorageSchema>;
+  storage: KvsLocalStorage<EditorStorageSchema>;
 }
 
 export function AutoSavePlugin({ storage }: Params) {

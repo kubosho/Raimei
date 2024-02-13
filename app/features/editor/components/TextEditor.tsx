@@ -1,3 +1,4 @@
+import type { KvsEnvStorage } from '@kvs/env/lib/share';
 import CodePkg from '@lexical/code';
 import LinkPkg from '@lexical/link';
 import ListPkg from '@lexical/list';
@@ -9,15 +10,18 @@ import ContentEditablePkg from '@lexical/react/LexicalContentEditable.js';
 import HistoryPluginPkg from '@lexical/react/LexicalHistoryPlugin.js';
 import MarkdownShortcutPluginPkg from '@lexical/react/LexicalMarkdownShortcutPlugin.js';
 import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
-import { useAtomValue } from 'jotai/react';
 import type { LexicalEditor } from 'lexical';
 
 import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
-import { appStorageAtom } from '../../../storage/atoms/app_storage_atom';
+import type { EditorStorageSchema } from '../../../storage/editor_storage_schema';
 import { AutoResurrectPlugin } from '../plugins/AutoResurrectPlugin';
 import { AutoSavePlugin } from '../plugins/AutoSavePlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';
 import { SaveContentsAsMarkdownPlugin } from '../plugins/SaveContentsAsMarkdownPlugin';
+
+interface Props {
+  storage: KvsEnvStorage<EditorStorageSchema> | null;
+}
 
 const { CodeNode } = CodePkg;
 const { LinkNode } = LinkPkg;
@@ -42,9 +46,7 @@ const initialConfig: InitialConfigType = {
   theme: textEditorThemeConfig,
 };
 
-export default function TextEditor() {
-  const appStorage = useAtomValue(appStorageAtom);
-
+export default function TextEditor({ storage }: Props): JSX.Element {
   return (
     <LexicalComposer initialConfig={initialConfig}>
       <div className="h-full relative">
@@ -57,10 +59,10 @@ export default function TextEditor() {
         />
       </div>
       <HistoryPlugin />
-      {appStorage ? (
+      {storage != null ? (
         <>
-          <AutoSavePlugin storage={appStorage} />
-          <AutoResurrectPlugin storage={appStorage} />
+          <AutoSavePlugin storage={storage} />
+          <AutoResurrectPlugin storage={storage} />
         </>
       ) : null}
       <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
