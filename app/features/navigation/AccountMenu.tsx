@@ -9,7 +9,7 @@ export default function AccountMenu() {
         </Link>
       </li>
       <li className="ml-8">
-        <Link className="p-1" to={{ pathname: '/auth/logout' }}>
+        <Link className="p-1" to={{ pathname: '/logout' }}>
           Logout
         </Link>
       </li>
