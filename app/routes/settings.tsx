@@ -23,13 +23,13 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     accessToken,
     env,
-    hasSession: session.has('userId'),
     userId: session.get('userId'),
   });
 };
 
 export default function SettingsMicroCms(): JSX.Element {
-  const { accessToken, env, hasSession, userId } = useLoaderData<typeof loader>();
+  const { accessToken, env, userId } = useLoaderData<typeof loader>();
+  const hasSession = userId != null;
 
   const [microCmsClientConfig, setMicroCmsClientConfig] = useAtom(microCmsClientConfigAtom);
 
@@ -40,7 +40,7 @@ export default function SettingsMicroCms(): JSX.Element {
   });
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    if (!hasSession || userId == null || supabaseClient == null) {
+    if (!hasSession || supabaseClient == null) {
       return;
     }
 
