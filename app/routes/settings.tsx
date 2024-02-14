@@ -1,6 +1,7 @@
 import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
+import type { MetaFunction } from '@remix-run/react';
 import { useAtom } from 'jotai/react';
 import type { FormEvent } from 'react';
 
@@ -25,6 +26,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     env,
     userId: session.get('userId'),
   });
+};
+
+export const meta: MetaFunction = () => {
+  return [{ title: 'Settings — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
 };
 
 export default function SettingsMicroCms(): JSX.Element {
