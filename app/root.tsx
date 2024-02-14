@@ -8,8 +8,6 @@ import { Database } from '../types/database.types';
 import { useInstance } from './common_hooks/use_instance';
 import { supabaseClientAtom } from './databases/atom/supabase_client_atom';
 import { createSupabaseServerClient } from './databases/supabase_server_client.server';
-import { Auth } from './features/auth';
-import { authAtom } from './features/auth/atoms/auth_atom';
 import { getSession } from './features/auth/cookie_session_storage.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
 import { fetchMicroCmsConfig } from './features/publish/micro_cms_config_fetcher';
@@ -55,13 +53,10 @@ export default function App() {
   const { env, microCmsConfig } = useLoaderData<typeof loader>();
 
   const supabase = useInstance(createBrowserClient<Database>(env.SUPABASE_URL, env.SUPABASE_ANON_KEY));
-  const auth = useInstance(new Auth(supabase.auth));
 
-  const setAuthAtom = useSetAtom(authAtom);
   const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
   const setSupabaseClientAtom = useSetAtom(supabaseClientAtom);
 
-  setAuthAtom(auth);
   setSupabaseClientAtom(supabase);
 
   if (microCmsConfig != null) {
