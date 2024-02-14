@@ -1,31 +1,43 @@
 import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
-import { useAtom, useAtomValue } from 'jotai/react';
+import { useAtom } from 'jotai/react';
 import type { FormEvent } from 'react';
 
-import { supabaseClientAtom } from '../databases/atom/supabase_client_atom';
+import { useSupabaseBrowserClient } from '../databases/hooks/use_supabase_browser_client';
+import LoginButtonLink from '../features/auth/components/LoginButtonLink';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
-import LoginButtonLink from '../features/auth/components/LoginButtonLink';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const env = {
+    SUPABASE_URL: process.env.SUPABASE_URL!,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
+  };
+
   const session = await getSession(request.headers.get('Cookie'));
+  const accessToken = session.get('accessToken') ?? null;
 
   return json({
+    accessToken,
+    env,
     hasSession: session.has('userId'),
     userId: session.get('userId'),
   });
 };
 
 export default function SettingsMicroCms(): JSX.Element {
-  const { hasSession, userId } = useLoaderData<typeof loader>();
+  const { accessToken, env, hasSession, userId } = useLoaderData<typeof loader>();
 
   const [microCmsClientConfig, setMicroCmsClientConfig] = useAtom(microCmsClientConfigAtom);
 
-  const supabaseClient = useAtomValue(supabaseClientAtom);
+  const supabaseClient = useSupabaseBrowserClient({
+    accessToken,
+    anonKey: env.SUPABASE_ANON_KEY,
+    url: env.SUPABASE_URL,
+  });
 
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
     if (!hasSession || userId == null || supabaseClient == null) {
