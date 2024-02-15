@@ -2,19 +2,23 @@ import { json } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
-import { useAtom } from 'jotai/react';
-import type { FormEvent } from 'react';
 
 import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import Header from '../features/navigation/Header';
-import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
+import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
   const userId = session.get('userId');
+  const accessToken = session.get('accessToken');
+
+  const supabaseClient = createSupabaseServerClient({ accessToken, request });
+
+  const microCmsClientConfig = await fetchMicroCmsConfig({ request, supabaseClient });
 
   return json({
+    microCmsClientConfig,
     userId,
   });
 };
@@ -48,20 +52,8 @@ export const meta: MetaFunction = () => {
 };
 
 export default function SettingsMicroCms(): JSX.Element {
-  const { userId } = useLoaderData<typeof loader>();
+  const { microCmsClientConfig, userId } = useLoaderData<typeof loader>();
   const hasSession = userId != null;
-
-  const [microCmsClientConfig, setMicroCmsClientConfig] = useAtom(microCmsClientConfigAtom);
-
-  const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    const formData = new FormData(event.currentTarget);
-    const apiKey = formData.get('apiKey') as string;
-    const endpoint = formData.get('endpoint') as string;
-    const serviceId = formData.get('serviceId') as string;
-
-    const config = { apiKey, endpoint, serviceId, userId };
-    setMicroCmsClientConfig(config);
-  };
 
   return (
     <>
@@ -72,7 +64,7 @@ export default function SettingsMicroCms(): JSX.Element {
           {!hasSession ? (
             <p>Please log in to view settings.</p>
           ) : (
-            <Form action="/settings" method="post" className="flex flex-col mt-10" onSubmit={handleFormSubmit}>
+            <Form action="/settings" method="post" className="flex flex-col mt-10">
               <label htmlFor="serviceId">microCMS service ID</label>
               <input
                 className="border-b-2 border-slate-500 focus:outline-none py-1"

@@ -40,8 +40,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { microCmsConfig } = useLoaderData<typeof loader>();
-  const navigation = useNavigation();
-  const isSubmitting = navigation.state === 'submitting';
+  const { state } = useNavigation();
+  const isSubmitting = state === 'submitting';
 
   const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
 
