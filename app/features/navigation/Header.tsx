@@ -1,7 +1,6 @@
 import { Link } from '@remix-run/react';
 
 import { ThunderSvg } from '../../assets/components/ThunderSvg';
-import LoginButtonLink from '../../features/auth/components/LoginButtonLink';
 import AccountMenu from '../../features/navigation/AccountMenu';
 
 interface Props {
@@ -18,7 +17,13 @@ export default function Header({ hasSession, isHiddenAuthComponent }: Props) {
           <span className="ml-1">Raimei</span>
         </Link>
       </h1>
-      {isHiddenAuthComponent ? null : hasSession ? <AccountMenu /> : <LoginButtonLink />}
+      {isHiddenAuthComponent ? null : hasSession ? (
+        <AccountMenu />
+      ) : (
+        <Link to={{ pathname: '/login' }} className="p-1">
+          Login
+        </Link>
+      )}
     </header>
   );
 }
