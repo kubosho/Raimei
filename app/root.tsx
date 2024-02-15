@@ -1,7 +1,19 @@
 import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, json, useLoaderData } from '@remix-run/react';
+import {
+  Links,
+  LiveReload,
+  Meta,
+  Outlet,
+  Scripts,
+  ScrollRestoration,
+  json,
+  useLoaderData,
+  useNavigation,
+} from '@remix-run/react';
+import classNames from 'classnames';
 import { useSetAtom } from 'jotai/react';
 
+import Loading from './common_components/Loading';
 import { createSupabaseServerClient } from './databases/supabase_server_client.server';
 import { getSession } from './features/auth/cookie_session_storage.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
@@ -28,6 +40,8 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function App() {
   const { microCmsConfig } = useLoaderData<typeof loader>();
+  const navigation = useNavigation();
+  const isSubmitting = navigation.state === 'submitting';
 
   const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
 
@@ -45,6 +59,13 @@ export default function App() {
       </head>
       <body className="gap-16 grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
         <Outlet />
+        <div
+          className={classNames('absolute bg-opacity-80 bg-slate-100 flex h-full items-center justify-center w-full', {
+            hidden: !isSubmitting,
+          })}
+        >
+          <Loading />
+        </div>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
