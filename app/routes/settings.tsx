@@ -23,7 +23,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
   const accessToken = session.get('accessToken') ?? null;
   const userId = session.get('userId');
@@ -45,7 +45,7 @@ export async function action({ request }: ActionFunctionArgs) {
     .select();
 
   return null;
-}
+};
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Settings — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];

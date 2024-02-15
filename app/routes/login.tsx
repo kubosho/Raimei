@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   });
 };
 
-export async function action({ request }: ActionFunctionArgs) {
+export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
 
   const formData = await request.formData();
@@ -46,7 +46,7 @@ export async function action({ request }: ActionFunctionArgs) {
       'Set-Cookie': await commitSession(session),
     },
   });
-}
+};
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Login — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
