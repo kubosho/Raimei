@@ -1,54 +1,59 @@
 import { json } from '@remix-run/node';
-import type { LoaderFunctionArgs } from '@remix-run/node';
-import { useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { Form, useLoaderData } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
 import { useAtom } from 'jotai/react';
 import type { FormEvent } from 'react';
 
-import { useSupabaseBrowserClient } from '../databases/hooks/use_supabase_browser_client';
+import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const env = {
-    SUPABASE_URL: process.env.SUPABASE_URL!,
-    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
-  };
-
   const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get('accessToken') ?? null;
+  const userId = session.get('userId');
 
   return json({
-    accessToken,
-    env,
-    userId: session.get('userId'),
+    userId,
   });
 };
+
+export async function action({ request }: ActionFunctionArgs) {
+  const session = await getSession(request.headers.get('Cookie'));
+  const accessToken = session.get('accessToken') ?? null;
+  const userId = session.get('userId');
+
+  if (accessToken == null || userId == null) {
+    return null;
+  }
+
+  const supabaseClient = createSupabaseServerClient({ accessToken, request });
+
+  const formData = await request.formData();
+  const apiKey = formData.get('apiKey') as string;
+  const endpoint = formData.get('endpoint') as string;
+  const serviceId = formData.get('serviceId') as string;
+
+  await supabaseClient
+    .from('micro_cms_configs')
+    .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userId })
+    .select();
+
+  return null;
+}
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Settings — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
 };
 
 export default function SettingsMicroCms(): JSX.Element {
-  const { accessToken, env, userId } = useLoaderData<typeof loader>();
+  const { userId } = useLoaderData<typeof loader>();
   const hasSession = userId != null;
 
   const [microCmsClientConfig, setMicroCmsClientConfig] = useAtom(microCmsClientConfigAtom);
 
-  const supabaseClient = useSupabaseBrowserClient({
-    accessToken,
-    anonKey: env.SUPABASE_ANON_KEY,
-    url: env.SUPABASE_URL,
-  });
-
   const handleFormSubmit = async (event: FormEvent<HTMLFormElement>) => {
-    if (!hasSession || supabaseClient == null) {
-      return;
-    }
-
-    event.preventDefault();
-
     const formData = new FormData(event.currentTarget);
     const apiKey = formData.get('apiKey') as string;
     const endpoint = formData.get('endpoint') as string;
@@ -56,11 +61,6 @@ export default function SettingsMicroCms(): JSX.Element {
 
     const config = { apiKey, endpoint, serviceId, userId };
     setMicroCmsClientConfig(config);
-
-    await supabaseClient
-      .from('micro_cms_configs')
-      .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userId })
-      .select();
   };
 
   return (
@@ -72,7 +72,7 @@ export default function SettingsMicroCms(): JSX.Element {
           {!hasSession ? (
             <p>Please log in to view settings.</p>
           ) : (
-            <form className="flex flex-col mt-10" onSubmit={handleFormSubmit}>
+            <Form action="/settings" method="post" className="flex flex-col mt-10" onSubmit={handleFormSubmit}>
               <label htmlFor="serviceId">microCMS service ID</label>
               <input
                 className="border-b-2 border-slate-500 focus:outline-none py-1"
@@ -109,7 +109,7 @@ export default function SettingsMicroCms(): JSX.Element {
               <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
                 Submit
               </button>
-            </form>
+            </Form>
           )}
         </section>
       </main>

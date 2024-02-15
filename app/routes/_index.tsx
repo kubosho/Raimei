@@ -8,6 +8,7 @@ import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
+import Loading from '../common_components/Loading';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import { bodyValueAsMarkdownAtom } from '../features/editor/atoms/body_value_as_markdown_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
@@ -87,9 +88,7 @@ export default function Index() {
     <>
       <Header hasSession={hasSession} isHiddenAuthComponent={false} />
       <main>
-        <ClientOnly fallback={<div className="max-w-screen-md mx-auto px-2 w-full">loading...</div>}>
-          {() => <Editor storage={storage} />}
-        </ClientOnly>
+        <ClientOnly fallback={<Loading />}>{() => <Editor storage={storage} />}</ClientOnly>
         <div className="bottom-0 fixed max-w-screen-md mt-10 mx-auto w-full">
           <SubmitButton onClick={handleClickSubmitButton} />
         </div>
