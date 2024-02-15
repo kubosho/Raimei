@@ -14,6 +14,7 @@ import { bodyValueAsMarkdownAtom } from '../features/editor/atoms/body_value_as_
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import SubmitButton from '../features/editor/components/SubmitButton';
 import Editor from '../features/editor/components/Editor';
+import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientAtom } from '../features/publish/atoms/micro_cms_client_atom';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
@@ -86,8 +87,10 @@ export default function Index() {
 
   return (
     <>
-      <Header hasSession={hasSession} isHiddenAuthComponent={false} />
-      <main>
+      <Header>
+        <AccountMenu hasSession={hasSession} />
+      </Header>
+      <main className="pb-16">
         <ClientOnly fallback={<Loading />}>{() => <Editor storage={storage} />}</ClientOnly>
         <div className="bottom-0 fixed max-w-screen-md mt-10 mx-auto w-full">
           <SubmitButton onClick={handleClickSubmitButton} />

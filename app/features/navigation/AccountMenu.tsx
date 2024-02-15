@@ -1,7 +1,11 @@
 import { Link } from '@remix-run/react';
 
-export default function AccountMenu() {
-  return (
+interface Props {
+  hasSession: boolean;
+}
+
+export default function AccountMenu({ hasSession }: Props) {
+  return hasSession ? (
     <ul className="flex">
       <li>
         <Link className="p-1" to={{ pathname: '/settings' }}>
@@ -14,5 +18,9 @@ export default function AccountMenu() {
         </Link>
       </li>
     </ul>
+  ) : (
+    <Link to={{ pathname: '/login' }} className="p-1">
+      Login
+    </Link>
   );
 }

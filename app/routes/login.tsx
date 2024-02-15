@@ -1,19 +1,10 @@
-import { json } from '@remix-run/node';
-import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, redirect, useLoaderData } from '@remix-run/react';
+import type { ActionFunctionArgs } from '@remix-run/node';
+import { Form, redirect } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
 
 import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
 import { commitSession, getSession } from '../features/auth/cookie_session_storage.server';
 import Header from '../features/navigation/Header';
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-
-  return json({
-    userId: session.get('userId'),
-  });
-};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
@@ -53,12 +44,9 @@ export const meta: MetaFunction = () => {
 };
 
 export default function Login() {
-  const { userId } = useLoaderData<typeof loader>();
-  const hasSession = userId != null;
-
   return (
     <>
-      <Header hasSession={hasSession} isHiddenAuthComponent={true} />
+      <Header />
       <main>
         <section className="max-w-screen-md mx-auto px-2">
           <h2 className="leading-relaxed text-3xl">Login</h2>

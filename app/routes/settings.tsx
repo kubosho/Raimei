@@ -5,6 +5,7 @@ import type { MetaFunction } from '@remix-run/react';
 
 import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
 import { getSession } from '../features/auth/cookie_session_storage.server';
+import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher';
 
@@ -57,7 +58,9 @@ export default function SettingsMicroCms(): JSX.Element {
 
   return (
     <>
-      <Header hasSession={hasSession} isHiddenAuthComponent={false} />
+      <Header>
+        <AccountMenu hasSession={hasSession} />
+      </Header>
       <main>
         <section className="max-w-screen-md mx-auto px-2">
           <h2 className="leading-relaxed text-3xl">Settings</h2>
