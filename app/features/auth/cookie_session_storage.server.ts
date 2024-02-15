@@ -10,6 +10,7 @@ type SessionFlashData = {
   error: AuthError;
 };
 
+const ONE_WEEK = 60 * 60 * 24 * 7;
 const SESSION_KEY = process.env.SESSION_KEY as string;
 
 const { getSession, commitSession, destroySession } = createCookieSessionStorage<SessionData, SessionFlashData>({
@@ -18,7 +19,7 @@ const { getSession, commitSession, destroySession } = createCookieSessionStorage
 
     // all of these are optional
     httpOnly: true,
-    maxAge: 3600,
+    maxAge: ONE_WEEK,
     path: '/',
     sameSite: 'lax',
     secrets: [SESSION_KEY],
