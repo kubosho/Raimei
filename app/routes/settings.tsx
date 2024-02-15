@@ -6,9 +6,7 @@ import { useAtom } from 'jotai/react';
 import type { FormEvent } from 'react';
 
 import { useSupabaseBrowserClient } from '../databases/hooks/use_supabase_browser_client';
-import LoginButtonLink from '../features/auth/components/LoginButtonLink';
 import { getSession } from '../features/auth/cookie_session_storage.server';
-import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
 
@@ -67,7 +65,7 @@ export default function SettingsMicroCms(): JSX.Element {
 
   return (
     <>
-      <Header>{hasSession ? <AccountMenu /> : <LoginButtonLink />}</Header>
+      <Header hasSession={hasSession} isHiddenAuthComponent={false} />
       <main>
         <section className="max-w-screen-md mx-auto px-2">
           <h2 className="leading-relaxed text-3xl">Settings</h2>

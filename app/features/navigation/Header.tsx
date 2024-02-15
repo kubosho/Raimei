@@ -1,13 +1,15 @@
 import { Link } from '@remix-run/react';
-import type { ReactNode } from 'react';
 
 import { ThunderSvg } from '../../assets/components/ThunderSvg';
+import LoginButtonLink from '../../features/auth/components/LoginButtonLink';
+import AccountMenu from '../../features/navigation/AccountMenu';
 
 interface Props {
-  children?: ReactNode;
+  hasSession: boolean;
+  isHiddenAuthComponent: boolean;
 }
 
-export default function Header({ children }: Props) {
+export default function Header({ hasSession, isHiddenAuthComponent }: Props) {
   return (
     <header className="flex items-center justify-between max-w-screen-md mx-auto px-2 py-4 w-full">
       <h1 className="py-2">
@@ -16,7 +18,7 @@ export default function Header({ children }: Props) {
           <span className="ml-1">Raimei</span>
         </Link>
       </h1>
-      {children}
+      {isHiddenAuthComponent ? null : hasSession ? <AccountMenu /> : <LoginButtonLink />}
     </header>
   );
 }
