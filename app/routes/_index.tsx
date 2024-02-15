@@ -88,13 +88,11 @@ export default function Index() {
   return (
     <>
       <Header>
+        <SubmitButton onClick={handleClickSubmitButton} />
         <AccountMenu hasSession={hasSession} />
       </Header>
       <main className="pb-16">
         <ClientOnly fallback={<Loading />}>{() => <Editor storage={storage} />}</ClientOnly>
-        <div className="bottom-0 fixed max-w-screen-md mt-10 mx-auto w-full">
-          <SubmitButton onClick={handleClickSubmitButton} />
-        </div>
       </main>
     </>
   );
