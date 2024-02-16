@@ -20,6 +20,9 @@ export function createSupabaseServerClient({ accessToken, request }: Params): Su
   const headers = new Headers();
 
   const supabaseClient = createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    auth: {
+      autoRefreshToken: accessToken != null,
+    },
     cookies: {
       get(key) {
         return cookies[key];
