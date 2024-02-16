@@ -24,29 +24,29 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
-  const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get('accessToken');
 
-  const supabaseClient = createSupabaseServerClient({ accessToken, request });
-  const microCmsConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
+  const session = await getSession(request.headers.get('Cookie'));
+  const supabaseClient = createSupabaseServerClient({ accessToken: session.get('accessToken'), request });
+
+  const microCmsClientConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
 
   return json(
     {
-      microCmsConfig,
+      microCmsClientConfig,
     },
     { headers: response.headers },
   );
 };
 
 export default function App() {
-  const { microCmsConfig } = useLoaderData<typeof loader>();
+  const { microCmsClientConfig } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   const isSubmitting = state === 'submitting';
 
   const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
 
-  if (microCmsConfig != null) {
-    setMicroCmsClientConfig(microCmsConfig);
+  if (microCmsClientConfig != null) {
+    setMicroCmsClientConfig(microCmsClientConfig);
   }
 
   return (
