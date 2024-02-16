@@ -7,7 +7,7 @@ import { createSupabaseServerClient } from '../databases/supabase_server_client.
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
-import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher';
+import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
@@ -16,7 +16,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const supabaseClient = createSupabaseServerClient({ accessToken, request });
 
-  const microCmsClientConfig = await fetchMicroCmsConfig({ request, supabaseClient });
+  const microCmsClientConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
 
   return json({
     microCmsClientConfig,

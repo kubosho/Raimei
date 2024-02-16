@@ -17,7 +17,7 @@ import Loading from './common_components/Loading';
 import { createSupabaseServerClient } from './databases/supabase_server_client.server';
 import { getSession } from './features/auth/cookie_session_storage.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
-import { fetchMicroCmsConfig } from './features/publish/micro_cms_config_fetcher';
+import { fetchMicroCmsClientConfig } from './features/publish/micro_cms_client_config_fetcher';
 import stylesheet from './tailwind.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
@@ -28,7 +28,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const accessToken = session.get('accessToken');
 
   const supabaseClient = createSupabaseServerClient({ accessToken, request });
-  const microCmsConfig = await fetchMicroCmsConfig({ request, supabaseClient });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
 
   return json(
     {

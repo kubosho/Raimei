@@ -10,14 +10,20 @@ interface Params {
   supabaseClient: SupabaseClient<Database>;
 }
 
-export async function fetchMicroCmsConfig({ request, supabaseClient }: Params): Promise<MicroCmsClientConfig | null> {
+export async function fetchMicroCmsClientConfig({
+  request,
+  supabaseClient,
+}: Params): Promise<MicroCmsClientConfig | null> {
   const session = await getSession(request.headers.get('Cookie'));
   const accessToken = session.get('accessToken');
   if (accessToken == null) {
     return null;
   }
 
-  const [{ error }, { data }] = await Promise.all([supabaseClient.auth.getUser(accessToken), supabaseClient.from('micro_cms_configs').select()]);
+  const [{ error }, { data }] = await Promise.all([
+    supabaseClient.auth.getUser(accessToken),
+    supabaseClient.from('micro_cms_configs').select(),
+  ]);
   if (data == null || error != null) {
     return null;
   }
