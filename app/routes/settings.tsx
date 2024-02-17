@@ -33,7 +33,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return null;
   }
 
-  const supabaseClient = createSupabaseServerClient({ accessToken, request });
+  const supabaseClient = createSupabaseServerClient({ accessToken });
 
   const formData = await request.formData();
   const apiKey = formData.get('apiKey') as string;

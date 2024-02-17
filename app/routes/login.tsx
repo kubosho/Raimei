@@ -13,7 +13,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const supabaseClient = createSupabaseServerClient({ request });
+  const supabaseClient = createSupabaseServerClient({});
 
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 

@@ -26,7 +26,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
 
   const session = await getSession(request.headers.get('Cookie'));
-  const supabaseClient = createSupabaseServerClient({ accessToken: session.get('accessToken'), request });
+  const supabaseClient = createSupabaseServerClient({ accessToken: session.get('accessToken') });
 
   const microCmsClientConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
 
