@@ -15,7 +15,9 @@ import { useSetAtom } from 'jotai/react';
 
 import Loading from './common_components/Loading';
 import { createSupabaseServerClient } from './databases/supabase_server_client.server';
-import { getSession } from './features/auth/cookie_session_storage.server';
+import { commitSession, getSession } from './features/auth/cookie_session_storage.server';
+import { updateAccessToken } from './features/auth/update_access_token.server';
+import { verifyAccessToken } from './features/auth/verify_access_token.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
 import { fetchMicroCmsClientConfig } from './features/publish/micro_cms_client_config_fetcher';
 import stylesheet from './tailwind.css';
@@ -24,19 +26,36 @@ export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get('accessToken');
-  const supabaseClient = createSupabaseServerClient({ accessToken });
-  const userId = session.get('userId');
+  const responseInit: ResponseInit = {};
 
-  if (userId == null) {
+  const accessToken = session.get('accessToken');
+  const refreshToken = session.get('refreshToken');
+  const userId = session.get('userId');
+  if (accessToken == null || refreshToken == null || userId == null) {
     return json({ microCmsClientConfig: null });
+  }
+
+  const supabaseClient = createSupabaseServerClient({ accessToken });
+
+  const verifiedAccessToken = await verifyAccessToken({ accessToken, supabaseClient });
+  if (verifiedAccessToken == null) {
+    const updatedAccessToken = await updateAccessToken({ refreshToken, supabaseClient });
+    if (updatedAccessToken == null) {
+      return json({ microCmsClientConfig: null });
+    }
+
+    session.set('accessToken', updatedAccessToken);
+    responseInit.headers = { ['Set-Cookie']: await commitSession(session) };
   }
 
   const microCmsClientConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId });
 
-  return json({
-    microCmsClientConfig,
-  });
+  return json(
+    {
+      microCmsClientConfig,
+    },
+    responseInit,
+  );
 };
 
 export default function App() {
