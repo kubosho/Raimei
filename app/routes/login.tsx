@@ -29,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   session.set('accessToken', data.session.access_token);
+  session.set('refreshToken', data.session.refresh_token);
   session.set('userId', data.user.id);
 
   // Login succeeded, send them to the home page.
