@@ -23,19 +23,20 @@ import stylesheet from './tailwind.css';
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = new Response();
-
   const session = await getSession(request.headers.get('Cookie'));
-  const supabaseClient = createSupabaseServerClient({ accessToken: session.get('accessToken') });
+  const accessToken = session.get('accessToken');
+  const supabaseClient = createSupabaseServerClient({ accessToken });
+  const userId = session.get('userId');
 
-  const microCmsClientConfig = await fetchMicroCmsClientConfig({ request, supabaseClient });
+  if (userId == null) {
+    return json({ microCmsClientConfig: null });
+  }
 
-  return json(
-    {
-      microCmsClientConfig,
-    },
-    { headers: response.headers },
-  );
+  const microCmsClientConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId });
+
+  return json({
+    microCmsClientConfig,
+  });
 };
 
 export default function App() {
