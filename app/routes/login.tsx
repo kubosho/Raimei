@@ -13,7 +13,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const supabaseClient = createSupabaseServerClient({ request });
+  const supabaseClient = createSupabaseServerClient({});
 
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
 
@@ -29,6 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   }
 
   session.set('accessToken', data.session.access_token);
+  session.set('refreshToken', data.session.refresh_token);
   session.set('userId', data.user.id);
 
   // Login succeeded, send them to the home page.

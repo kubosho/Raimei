@@ -2,24 +2,20 @@ import { json } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useLoaderData } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
+import { useAtomValue } from 'jotai/react';
 
 import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
-import { loader as rootLoader } from '../root';
+import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
 
-export const loader = async ({ context, params, request }: LoaderFunctionArgs) => {
-  const [session, parentLoader] = await Promise.all([
-    getSession(request.headers.get('Cookie')),
-    rootLoader({ context, params, request }),
-  ]);
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const session = await getSession(request.headers.get('Cookie'));
 
   const userId = session.get('userId');
-  const { microCmsClientConfig } = await parentLoader.json();
 
   return json({
-    microCmsClientConfig,
     userId,
   });
 };
@@ -33,7 +29,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     return null;
   }
 
-  const supabaseClient = createSupabaseServerClient({ accessToken, request });
+  const supabaseClient = createSupabaseServerClient({ accessToken });
 
   const formData = await request.formData();
   const apiKey = formData.get('apiKey') as string;
@@ -53,8 +49,10 @@ export const meta: MetaFunction = () => {
 };
 
 export default function SettingsMicroCms(): JSX.Element {
-  const { microCmsClientConfig, userId } = useLoaderData<typeof loader>();
+  const { userId } = useLoaderData<typeof loader>();
   const hasSession = userId != null;
+
+  const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
 
   return (
     <>

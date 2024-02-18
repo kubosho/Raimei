@@ -3,6 +3,7 @@ import type { AuthError } from '@supabase/supabase-js';
 
 type SessionData = {
   accessToken: string;
+  refreshToken: string;
   userId: string;
 };
 
