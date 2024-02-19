@@ -1,15 +1,6 @@
 import { createCookieSessionStorage } from '@remix-run/node';
-import type { AuthError } from '@supabase/supabase-js';
 
-type SessionData = {
-  accessToken: string;
-  refreshToken: string;
-  userId: string;
-};
-
-type SessionFlashData = {
-  error: AuthError;
-};
+import type { SessionData, SessionFlashData } from './session_type';
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
 const SESSION_KEY = process.env.SESSION_KEY as string;
