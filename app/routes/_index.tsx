@@ -46,7 +46,7 @@ export default function Index() {
 
   const createMicroCmsClient = useCallback(() => {
     const config = microCmsClientConfig;
-    if (config == null) {
+    if (config == null || config.apiKey === '' || config.serviceId === '') {
       return;
     }
 
