@@ -88,7 +88,7 @@ export default function App() {
       </head>
       <body className="gap-16 grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
         {alertState == null ? null : (
-          <div className="fixed inline-flex inset-x-0 justify-center top-4">
+          <div className="absolute inline-flex inset-x-0 justify-center top-4">
             <Alert
               description={alertState.description}
               message={alertState.message}
