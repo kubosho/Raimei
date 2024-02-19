@@ -1,10 +1,12 @@
 import { json } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
-import { Form, useLoaderData } from '@remix-run/react';
+import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
-import { useAtomValue } from 'jotai/react';
+import { useAtomValue, useSetAtom } from 'jotai/react';
+import { useEffect } from 'react';
 
 import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
+import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
@@ -26,7 +28,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const userId = session.get('userId');
 
   if (accessToken == null || userId == null) {
-    return null;
+    return json({
+      data: null,
+      error: {
+        message: 'Unauthorized',
+        status: 401,
+      },
+    });
   }
 
   const supabaseClient = createSupabaseServerClient({ accessToken });
@@ -36,12 +44,12 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const endpoint = formData.get('endpoint') as string;
   const serviceId = formData.get('serviceId') as string;
 
-  await supabaseClient
+  const { data, error } = await supabaseClient
     .from('micro_cms_configs')
     .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userId })
     .select();
 
-  return null;
+  return json({ data, error });
 };
 
 export const meta: MetaFunction = () => {
@@ -49,10 +57,33 @@ export const meta: MetaFunction = () => {
 };
 
 export default function SettingsMicroCms(): JSX.Element {
+  const actionData = useActionData<typeof action>();
   const { userId } = useLoaderData<typeof loader>();
   const hasSession = userId != null;
 
   const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
+
+  const setAlertState = useSetAtom(alertStateAtom);
+
+  useEffect(() => {
+    if (actionData == null) {
+      return;
+    }
+
+    const { error } = actionData;
+    if (error != null) {
+      setAlertState({
+        type: 'error',
+        message: error.message,
+      });
+      return;
+    }
+
+    setAlertState({
+      type: 'success',
+      message: 'Settings saved',
+    });
+  }, [actionData, setAlertState]);
 
   return (
     <>
