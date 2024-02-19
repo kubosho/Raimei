@@ -11,10 +11,13 @@ import {
   useNavigation,
 } from '@remix-run/react';
 import classNames from 'classnames';
-import { useSetAtom } from 'jotai/react';
+import { useAtom, useSetAtom } from 'jotai/react';
+import { useCallback } from 'react';
 
+import Alert from './common_components/Alert';
 import Loading from './common_components/Loading';
 import { createSupabaseServerClient } from './databases/supabase_server_client.server';
+import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 import { commitSession, getSession } from './features/auth/cookie_session_storage.server';
 import { updateAccessToken } from './features/auth/update_access_token.server';
 import { verifyAccessToken } from './features/auth/verify_access_token.server';
@@ -63,7 +66,13 @@ export default function App() {
   const { state } = useNavigation();
   const isSubmitting = state === 'submitting';
 
+  const [alertState, setAlertState] = useAtom(alertStateAtom);
+
   const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
+
+  const handleClickCloseAlert = useCallback(() => {
+    setAlertState(null);
+  }, [setAlertState]);
 
   if (microCmsClientConfig != null) {
     setMicroCmsClientConfig(microCmsClientConfig);
@@ -78,6 +87,16 @@ export default function App() {
         <Links />
       </head>
       <body className="gap-16 grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
+        {alertState == null ? null : (
+          <div className="absolute inline-flex inset-x-0 justify-center top-4">
+            <Alert
+              description={alertState.description}
+              message={alertState.message}
+              type={alertState.type}
+              onClose={handleClickCloseAlert}
+            />
+          </div>
+        )}
         <Outlet />
         <div
           className={classNames('absolute bg-opacity-80 bg-slate-100 flex h-full items-center justify-center w-full', {
