@@ -59,25 +59,26 @@ async function fetchAvailableAccessToken({
   return await updateAccessToken({ refreshToken, supabaseClient });
 }
 
-export async function createSupabaseServerClient(session: Session<SessionData, SessionFlashData>): Promise<{
+export async function createSupabaseServerClient(session?: Session<SessionData, SessionFlashData>): Promise<{
   session: Session<SessionData, SessionFlashData> | null;
   supabaseClient: SupabaseClient<Database> | null;
 }> {
-  const storedAccessToken = session.get('accessToken');
-  const storedRefreshToken = session.get('refreshToken');
-  if (storedAccessToken == null || storedRefreshToken == null) {
-    return {
-      session: null,
-      supabaseClient: null,
-    };
-  }
-
   const { env } = process;
   if (env.SUPABASE_ANON_KEY == null || env.SUPABASE_URL == null) {
     throw new Error('SUPABASE_ANON_KEY or SUPABASE_URL are not set. Please set environment variables.');
   }
 
   const { SUPABASE_ANON_KEY, SUPABASE_URL } = env;
+
+  const storedAccessToken = session?.get('accessToken');
+  const storedRefreshToken = session?.get('refreshToken');
+  if (session == null || storedAccessToken == null || storedRefreshToken == null) {
+    const supabaseClient = createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, { cookies: {} });
+    return {
+      session: null,
+      supabaseClient,
+    };
+  }
 
   const supabaseClient = createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
     cookies: {},

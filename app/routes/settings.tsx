@@ -23,9 +23,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-  const accessToken = session.get('accessToken') ?? null;
-  const userId = session.get('userId');
+  const currentSession = await getSession(request.headers.get('Cookie'));
+  const accessToken = currentSession.get('accessToken') ?? null;
+  const userId = currentSession.get('userId');
 
   if (accessToken == null || userId == null) {
     return json({
@@ -37,7 +37,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const supabaseClient = await createSupabaseServerClient({ session });
+  const { supabaseClient } = await createSupabaseServerClient(currentSession);
   if (supabaseClient == null) {
     // TODO: Offline error handling
     return json({

@@ -26,29 +26,24 @@ import stylesheet from './tailwind.css';
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-  const userId = session.get('userId');
+  const currentSession = await getSession(request.headers.get('Cookie'));
+  const responseInit: ResponseInit = {};
 
-  const supabaseClient = await createSupabaseServerClient({ session });
-  if (supabaseClient == null || userId == null) {
+  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
+  if (supabaseClient == null || session == null) {
     return json({ microCmsClientConfig: null });
   }
 
-  const [cookie, microCmsClientConfig] = await Promise.all([
-    commitSession(session),
-    fetchMicroCmsClientConfig({ supabaseClient, userId }),
-  ]);
+  const userId = session.get('userId');
+  const microCmsClientConfig = userId == null ? null : await fetchMicroCmsClientConfig({ supabaseClient, userId });
 
-  return json(
-    {
-      microCmsClientConfig,
-    },
-    {
-      headers: {
-        ['Set-Cookie']: cookie,
-      },
-    },
-  );
+  if (currentSession.get('accessToken') !== session.get('accessToken')) {
+    responseInit.headers = {
+      ['Set-Cookie']: await commitSession(session),
+    };
+  }
+
+  return json({ microCmsClientConfig }, responseInit);
 };
 
 export default function App() {

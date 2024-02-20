@@ -7,17 +7,16 @@ import { commitSession, getSession } from '../features/auth/cookie_session_stora
 import Header from '../features/navigation/Header';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-
   const formData = await request.formData();
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const supabaseClient = await createSupabaseServerClient({ session });
+  const { supabaseClient } = await createSupabaseServerClient();
   if (supabaseClient == null) {
     return redirect('/login');
   }
 
+  const session = await getSession(request.headers.get('Cookie'));
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
   if (error != null) {
     session.flash('error', error);
