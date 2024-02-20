@@ -13,14 +13,15 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
 
-  const supabaseClient = createSupabaseServerClient({});
+  const supabaseClient = await createSupabaseServerClient({ session });
+  if (supabaseClient == null) {
+    return redirect('/login');
+  }
 
   const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-
   if (error != null) {
     session.flash('error', error);
 
-    // Redirect back to the login page with errors.
     return redirect('/login', {
       headers: {
         'Set-Cookie': await commitSession(session),
@@ -32,7 +33,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   session.set('refreshToken', data.session.refresh_token);
   session.set('userId', data.user.id);
 
-  // Login succeeded, send them to the home page.
   return redirect('/', {
     headers: {
       'Set-Cookie': await commitSession(session),

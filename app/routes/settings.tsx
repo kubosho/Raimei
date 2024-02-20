@@ -37,7 +37,14 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const supabaseClient = createSupabaseServerClient({ accessToken });
+  const supabaseClient = await createSupabaseServerClient({ session });
+  if (supabaseClient == null) {
+    // TODO: Offline error handling
+    return json({
+      data: null,
+      error: null,
+    });
+  }
 
   const formData = await request.formData();
   const apiKey = formData.get('apiKey') as string;
