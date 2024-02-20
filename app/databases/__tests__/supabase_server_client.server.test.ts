@@ -31,7 +31,7 @@ afterAll(() => {
 });
 
 describe('createSupabaseServerClient()', () => {
-  test('an access token is available, get the Supabase client', async () => {
+  test('an access token is available, return the Supabase client and current session', async () => {
     // Given
     const session = await getSession();
     session.set('accessToken', ACCESS_TOKEN);
@@ -43,13 +43,13 @@ describe('createSupabaseServerClient()', () => {
     );
 
     // When
-    const supabaseClient = await createSupabaseServerClient({ session });
+    const data = await createSupabaseServerClient(session);
 
     // Then
-    expect(supabaseClient).not.toBe(null);
+    expect(data).not.toEqual({ session: null, supabaseClient: null });
   });
 
-  test('an access token is unavailable but a refresh token is available, get the Supabase client', async () => {
+  test('an access token is unavailable but a refresh token is available, return the Supabase client and currnet session', async () => {
     // Given
     const session = await getSession();
     session.set('accessToken', ACCESS_TOKEN);
@@ -64,9 +64,9 @@ describe('createSupabaseServerClient()', () => {
     );
 
     // When
-    const supabaseClient = await createSupabaseServerClient({ session });
+    const data = await createSupabaseServerClient(session);
 
     // Then
-    expect(supabaseClient).not.toBe(null);
+    expect(data).not.toEqual({ session: null, supabaseClient: null });
   });
 });

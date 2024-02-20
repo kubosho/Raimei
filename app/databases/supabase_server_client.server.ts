@@ -59,15 +59,17 @@ async function fetchAvailableAccessToken({
   return await updateAccessToken({ refreshToken, supabaseClient });
 }
 
-export async function createSupabaseServerClient({
-  session,
-}: {
-  session: Session<SessionData, SessionFlashData>;
-}): Promise<SupabaseClient<Database> | null> {
+export async function createSupabaseServerClient(session: Session<SessionData, SessionFlashData>): Promise<{
+  session: Session<SessionData, SessionFlashData> | null;
+  supabaseClient: SupabaseClient<Database> | null;
+}> {
   const storedAccessToken = session.get('accessToken');
   const storedRefreshToken = session.get('refreshToken');
   if (storedAccessToken == null || storedRefreshToken == null) {
-    return null;
+    return {
+      session: null,
+      supabaseClient: null,
+    };
   }
 
   const { env } = process;
@@ -92,12 +94,18 @@ export async function createSupabaseServerClient({
     supabaseClient,
   });
   if (availableAccessToken == null) {
-    return null;
+    return {
+      session: null,
+      supabaseClient: null,
+    };
   } else if (availableAccessToken === storedAccessToken) {
-    return supabaseClient;
+    return {
+      session,
+      supabaseClient,
+    };
   } else if (availableAccessToken !== storedAccessToken) {
     session.set('accessToken', availableAccessToken);
-    return createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
+    const supabaseClient = createServerClient<Database>(SUPABASE_URL, SUPABASE_ANON_KEY, {
       cookies: {},
       global: {
         headers: {
@@ -105,7 +113,15 @@ export async function createSupabaseServerClient({
         },
       },
     });
+
+    return {
+      session,
+      supabaseClient,
+    };
   }
 
-  return null;
+  return {
+    session: null,
+    supabaseClient: null,
+  };
 }
