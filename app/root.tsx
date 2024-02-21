@@ -20,7 +20,7 @@ import { createSupabaseServerClient } from './databases/supabase_server_client.s
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 import { commitSession, getSession } from './features/auth/cookie_session_storage.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
-import { initializeMicroCmsClientConfigCache } from './features/publish/micro_cms_client_config_cache';
+import { initializeMicroCmsConfigCacheStorage } from './storage/micro_cms_config_cache_storage';
 import { fetchMicroCmsClientConfig } from './features/publish/micro_cms_client_config_fetcher';
 import stylesheet from './tailwind.css';
 
@@ -32,7 +32,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   {
     // Initialize TTL cache.
-    initializeMicroCmsClientConfigCache();
+    initializeMicroCmsConfigCacheStorage();
   }
 
   const { session, supabaseClient } = await createSupabaseServerClient(currentSession);

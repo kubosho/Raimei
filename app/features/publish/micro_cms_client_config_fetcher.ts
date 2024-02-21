@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '../../../types/database.types';
 
-import { getMicroCmsClientConfigCache } from './micro_cms_client_config_cache';
+import { getMicroCmsConfigCacheStorage } from '../../storage/micro_cms_config_cache_storage';
 import type { MicroCmsClientConfig } from './types/micro_cms_client_config';
 
 interface Params {
@@ -14,9 +14,9 @@ export async function fetchMicroCmsClientConfig({
   supabaseClient,
   userId,
 }: Params): Promise<MicroCmsClientConfig | null> {
-  const cache = getMicroCmsClientConfigCache();
+  const cacheStorage = getMicroCmsConfigCacheStorage();
 
-  const cachedConfig = cache.get(userId);
+  const cachedConfig = cacheStorage.get(userId);
   if (cachedConfig != null) {
     return cachedConfig;
   }
@@ -40,7 +40,7 @@ export async function fetchMicroCmsClientConfig({
     return null;
   }
 
-  cache.set(userId, microCmsConfig);
+  cacheStorage.set(userId, microCmsConfig);
 
   return microCmsConfig;
 }

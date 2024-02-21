@@ -11,6 +11,7 @@ import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
+import { destructMicroCmsConfigCacheStorage } from '../storage/micro_cms_config_cache_storage';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
@@ -55,6 +56,8 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     .from('micro_cms_configs')
     .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userId })
     .select();
+
+  destructMicroCmsConfigCacheStorage();
 
   return json({ data, error });
 };
