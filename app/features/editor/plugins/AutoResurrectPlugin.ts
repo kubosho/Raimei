@@ -2,7 +2,7 @@ import type { KvsLocalStorage } from '@kvs/node-localstorage';
 import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.js';
 import { useCallback, useEffect } from 'react';
 
-import { EditorStorageSchema } from '../../../local_storage/editor_storage_schema';
+import { EditorStorageSchema } from '../../../local_storage/editor_storage_schema.client';
 
 const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 

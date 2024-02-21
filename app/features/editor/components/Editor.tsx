@@ -1,6 +1,6 @@
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
 
-import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema';
+import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema.client';
 
 import TextEditor from './TextEditor';
 import TitleEditor from './TitleEditor';

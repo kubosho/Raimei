@@ -13,7 +13,7 @@ import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
 import type { LexicalEditor } from 'lexical';
 
 import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
-import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema';
+import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema.client';
 import { AutoResurrectPlugin } from '../plugins/AutoResurrectPlugin';
 import { AutoSavePlugin } from '../plugins/AutoSavePlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';

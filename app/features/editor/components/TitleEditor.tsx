@@ -3,7 +3,7 @@ import { useAtom } from 'jotai/react';
 import { useCallback, useEffect } from 'react';
 import type { ChangeEvent } from 'react';
 
-import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema';
+import type { EditorStorageSchema } from '../../../local_storage/editor_storage_schema.client';
 import { titleValueAtom } from '../atoms/title_value_atom';
 
 interface Props {
