@@ -5,7 +5,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '../../types/database.types';
 import { getSession } from '../features/auth/cookie_session_storage.server';
-import type { SessionData, SessionFlashData } from '../features/auth/session_type';
+import type { SessionData, SessionFlashData } from '../features/auth/session_type.server';
 
 async function updateAccessToken({
   refreshToken,

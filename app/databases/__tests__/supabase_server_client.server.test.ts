@@ -3,7 +3,7 @@ import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 
-import { getSession } from '../../features/auth/__mock__/cookie_session_storage_mock';
+import { getSession } from '../../features/auth/__mock__/cookie_session_storage_mock.server';
 import { SessionFactory } from '../../features/auth/__mock__/session_factory';
 import { UserFactory } from '../../features/auth/__mock__/user_factory';
 import { createSupabaseServerClient } from '../supabase_server_client.server';

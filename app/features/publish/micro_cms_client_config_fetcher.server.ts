@@ -2,7 +2,7 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '../../../types/database.types';
 
-import { getMicroCmsConfigCacheStorage } from '../../storage/micro_cms_config_cache_storage';
+import { getMicroCmsConfigCacheStorage } from '../../storage/micro_cms_config_cache_storage.server';
 import type { MicroCmsClientConfig } from './types/micro_cms_client_config';
 
 interface Params {

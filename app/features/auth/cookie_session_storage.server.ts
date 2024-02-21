@@ -1,6 +1,6 @@
 import { createCookieSessionStorage } from '@remix-run/node';
 
-import type { SessionData, SessionFlashData } from './session_type';
+import type { SessionData, SessionFlashData } from './session_type.server';
 
 const ONE_WEEK = 60 * 60 * 24 * 7;
 const SESSION_KEY = process.env.SESSION_KEY as string;
