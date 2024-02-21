@@ -77,4 +77,25 @@ describe('createSupabaseServerClient()', () => {
     // Then
     expect(supabaseClient).not.toBe(null);
   });
+
+  test('an access token is updated, the new access token is stored in a new session', async () => {
+    // Given
+    const session = await getSession();
+    session.set('accessToken', ACCESS_TOKEN);
+    session.set('refreshToken', REFRESH_TOKEN);
+    server.use(
+      http.get(SUPABASE_GET_USER_API_URL, () => {
+        return HttpResponse.json(new AuthError('Unauthorized', 401), { status: 401 });
+      }),
+      http.post(SUPABASE_REFRESH_TOKEN_API_URL, async () => {
+        return HttpResponse.json(SessionFactory.build({ access_token: REFRESHED_ACCESS_TOKEN }));
+      }),
+    );
+
+    // When
+    const { session: newSession } = await createSupabaseServerClient(session);
+
+    // Then
+    expect(newSession!.get('accessToken')).not.toBe(session.get('accessToken'));
+  });
 });

@@ -14,6 +14,7 @@
     "type-gen:supabase": "./tools/supabase_type_gen.sh"
   },
   "dependencies": {
+    "@isaacs/ttlcache": "^1.4.1",
     "@kvs/env": "^2.2.0",
     "@lexical/code": "^0.13.1",
     "@lexical/link": "^0.13.1",
