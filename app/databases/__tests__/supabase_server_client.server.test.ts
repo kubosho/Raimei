@@ -70,7 +70,7 @@ describe('createSupabaseServerClient()', () => {
     expect(data).not.toEqual({ session: null, supabaseClient: null });
   });
 
-  test('a session is not passed to an argument, return a new Supabase client', async () => {
+  test('an argument is empty, return a new Supabase client', async () => {
     // When
     const { supabaseClient } = await createSupabaseServerClient();
 
