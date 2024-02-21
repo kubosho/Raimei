@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from '@remix-run/node';
 import { Form, redirect } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
 
-import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
+import { createSupabaseServerClient } from '../database/supabase_server_client.server';
 import { commitSession, getSession } from '../features/auth/cookie_session_storage.server';
 import Header from '../features/navigation/Header';
 

@@ -5,7 +5,7 @@ import type { MetaFunction } from '@remix-run/react';
 import { useAtomValue, useSetAtom } from 'jotai/react';
 import { useEffect } from 'react';
 
-import { createSupabaseServerClient } from '../databases/supabase_server_client.server';
+import { createSupabaseServerClient } from '../database/supabase_server_client.server';
 import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';

@@ -16,7 +16,7 @@ import { useCallback } from 'react';
 
 import Alert from './common_components/Alert';
 import Loading from './common_components/Loading';
-import { createSupabaseServerClient } from './databases/supabase_server_client.server';
+import { createSupabaseServerClient } from './database/supabase_server_client.server';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 import { commitSession, getSession } from './features/auth/cookie_session_storage.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
