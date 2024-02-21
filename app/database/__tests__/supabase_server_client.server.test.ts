@@ -1,3 +1,4 @@
+// @vitest-environment node
 import { AuthError } from '@supabase/supabase-js';
 import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
