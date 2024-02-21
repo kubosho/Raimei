@@ -3,7 +3,7 @@ import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.
 import { useCallback, useEffect } from 'react';
 import { EditorState } from 'lexical';
 
-import { EditorStorageSchema } from '../../../storage/editor_storage_schema';
+import { EditorStorageSchema } from '../../../local_storage/editor_storage_schema';
 
 const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 

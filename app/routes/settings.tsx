@@ -11,7 +11,7 @@ import { getSession } from '../features/auth/cookie_session_storage.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
-import { destructMicroCmsConfigCacheStorage } from '../storage/micro_cms_config_cache_storage.server';
+import { destructMicroCmsConfigCacheStorage } from '../local_storage/micro_cms_config_cache_storage.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const session = await getSession(request.headers.get('Cookie'));
