@@ -30,7 +30,7 @@
     "@supabase/supabase-js": "^2.39.3",
     "classnames": "^2.5.1",
     "isbot": "^5.1.0",
-    "jotai": "^2.6.4",
+    "jotai": "^2.6.5",
     "lexical": "^0.13.1",
     "microcms-js-sdk": "^2.7.0",
     "react": "canary",
