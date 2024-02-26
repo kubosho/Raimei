@@ -30,8 +30,8 @@ dependencies:
     specifier: ^0.13.1
     version: 0.13.1(@lexical/clipboard@0.13.1)(@lexical/selection@0.13.1)(@lexical/utils@0.13.1)(lexical@0.13.1)
   '@remix-run/css-bundle':
-    specifier: ^2.6.0
-    version: 2.6.0
+    specifier: ^2.7.2
+    version: 2.7.2
   '@remix-run/node':
     specifier: ^2.5.1
     version: 2.6.0(typescript@5.3.3)
@@ -1460,8 +1460,8 @@ packages:
     dev: true
     optional: true
 
-  /@remix-run/css-bundle@2.6.0:
-    resolution: {integrity: sha512-c3I1FVsWeBoA3c92Fwa1sufxAlosovfE2V7hwjc9HeQHA3DAHe18RXfgU6my/IvpItkIvaEgQPuoWEA6Dh8VDQ==}
+  /@remix-run/css-bundle@2.7.2:
+    resolution: {integrity: sha512-oRbNdNJFenuZ4TVYsmk916zbLpcAHcE5TlktMQR5KH0ANLsDiZt/jZRotvRjQ/p8YdyVFUKRRVDWbyG4bJsnFQ==}
     engines: {node: '>=18.0.0'}
     dev: false
 
