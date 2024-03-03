@@ -13,8 +13,8 @@ export type MicroCmsApiSchema = {
   updatedAt: string;
   publishedAt: string;
   revisedAt: string;
-  categories: string[] | undefined;
-  tags: string[] | undefined;
-  excerpt: string | undefined;
-  heroImage: Image | undefined;
+  categories?: string[];
+  tags?: string[];
+  excerpt?: string;
+  heroImage?: Image;
 };
