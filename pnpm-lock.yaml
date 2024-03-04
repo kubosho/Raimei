@@ -69,8 +69,8 @@ dependencies:
     specifier: canary
     version: 18.3.0-canary-59831c98c-20240218(react@18.3.0-canary-59831c98c-20240218)
   react-error-boundary:
-    specifier: ^4.0.12
-    version: 4.0.12(react@18.3.0-canary-59831c98c-20240218)
+    specifier: ^4.0.13
+    version: 4.0.13(react@18.3.0-canary-59831c98c-20240218)
   remix-utils:
     specifier: ^7.5.0
     version: 7.5.0(@remix-run/node@2.7.2)(@remix-run/react@2.7.2)(react@18.3.0-canary-59831c98c-20240218)
@@ -6313,8 +6313,8 @@ packages:
       react: 18.3.0-canary-59831c98c-20240218
     dev: false
 
-  /react-error-boundary@4.0.12(react@18.3.0-canary-59831c98c-20240218):
-    resolution: {integrity: sha512-kJdxdEYlb7CPC1A0SeUY38cHpjuu6UkvzKiAmqmOFL21VRfMhOcWxTCBgLVCO0VEMh9JhFNcVaXlV4/BTpiwOA==}
+  /react-error-boundary@4.0.13(react@18.3.0-canary-59831c98c-20240218):
+    resolution: {integrity: sha512-b6PwbdSv8XeOSYvjt8LpgpKrZ0yGdtZokYwkwV2wlcZbxgopHX/hgPl5VgpnoVOWd868n1hktM8Qm4b+02MiLQ==}
     peerDependencies:
       react: '>=16.13.1'
     dependencies:

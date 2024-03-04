@@ -35,7 +35,7 @@
     "microcms-js-sdk": "^2.7.0",
     "react": "canary",
     "react-dom": "canary",
-    "react-error-boundary": "^4.0.12",
+    "react-error-boundary": "^4.0.13",
     "remix-utils": "^7.5.0"
   },
   "devDependencies": {
