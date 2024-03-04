@@ -23,7 +23,7 @@
     "@lexical/react": "^0.13.1",
     "@lexical/rich-text": "^0.13.1",
     "@remix-run/css-bundle": "^2.7.2",
-    "@remix-run/node": "^2.7.2",
+    "@remix-run/node": "^2.8.0",
     "@remix-run/react": "^2.7.2",
     "@remix-run/serve": "^2.7.2",
     "@supabase/ssr": "^0.1.0",
