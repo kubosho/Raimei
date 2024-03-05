@@ -1,4 +1,6 @@
 export type EditorStorageSchema = {
-  textEditorState: string;
-  titleEditorState: string;
+  [key: string]: {
+    title: string;
+    body: string;
+  };
 };
