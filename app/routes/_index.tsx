@@ -50,6 +50,9 @@ export default function Index() {
       </Header>
       <main className="pb-16">
         <ul className="max-w-screen-md mx-auto px-2">
+          <li>
+            <Link to="/entries/new">Create new enrty</Link>
+          </li>
           {contents.map(({ id, title }) => (
             <li key={id} className="my-4">
               <Link to={`/entries/${id}`}>{title}</Link>
