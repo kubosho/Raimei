@@ -19,6 +19,7 @@ import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientAtom } from '../features/publish/atoms/micro_cms_client_atom';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
+import { getInstance } from '../local_storage/editor_storage.client';
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -59,18 +60,14 @@ export default function EntryNew() {
   }, [microCmsClientConfig, setMicroCmsClient]);
 
   const initializeEditorState = useCallback(async () => {
-    const storage = await kvsEnvStorage<EditorStorageSchema>({
-      name: 'RaimeiEditor',
-      version: 1,
-    });
-
+    const storage = await getInstance();
     const value = await storage.get('new');
 
     if (value != null) {
-      setTitleValue(value.title);
       setBodyValue(value.body);
+      setTitleValue(value.title);
     } else {
-      storage.set('new', { title: '', body: '' });
+      storage?.set('new', { title: '', body: '' });
     }
 
     setStorage(storage);
