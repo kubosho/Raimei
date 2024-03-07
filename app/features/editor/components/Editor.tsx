@@ -8,13 +8,13 @@ import type { InitialConfigType } from '@lexical/react/LexicalComposer.js';
 import ContentEditablePkg from '@lexical/react/LexicalContentEditable.js';
 import HistoryPluginPkg from '@lexical/react/LexicalHistoryPlugin.js';
 import MarkdownShortcutPluginPkg from '@lexical/react/LexicalMarkdownShortcutPlugin.js';
-import OnChnagePluginPkg from '@lexical/react/LexicalOnChangePlugin.js';
 import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
-import type { EditorState, LexicalEditor } from 'lexical';
-import { useState, type ChangeEvent } from 'react';
+import type { LexicalEditor } from 'lexical';
+import { useState } from 'react';
+import type { ChangeEvent } from 'react';
 
 import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
-import { SaveContentsAsMarkdownPlugin } from '../plugins/SaveContentsAsMarkdownPlugin';
+import { MarkdownConverterPlugin } from '../plugins/MarkdownConverterPlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';
 
 const { CodeNode } = CodePkg;
@@ -25,9 +25,8 @@ const { HeadingNode, QuoteNode } = RichTextPkg;
 const { ContentEditable } = ContentEditablePkg;
 const { HistoryPlugin } = HistoryPluginPkg;
 const { LexicalComposer } = LexicalComposerPkg;
-const { TRANSFORMERS } = LexicalMarkdownPkg;
+const { $convertFromMarkdownString, TRANSFORMERS } = LexicalMarkdownPkg;
 const { MarkdownShortcutPlugin } = MarkdownShortcutPluginPkg;
-const { OnChangePlugin } = OnChnagePluginPkg;
 const { RichTextPlugin } = RichTextPluginPkg;
 
 interface Props {
@@ -44,7 +43,7 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
   const [bodyValue, setBodyValue] = useState(body);
 
   const initialConfig: InitialConfigType = {
-    editorState: bodyValue !== '' ? bodyValue : null,
+    editorState: bodyValue !== '' ? () => $convertFromMarkdownString(bodyValue, TRANSFORMERS) : null,
     namespace: 'RaimeiEditor',
     nodes: EDITOR_NODES,
     onError: (error: Error, editor: LexicalEditor) => {
@@ -59,9 +58,7 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
     onChangeTitle(value);
   };
 
-  const handleChangeBody = (editorState: EditorState) => {
-    const value = JSON.stringify(editorState);
-    console.log({ value });
+  const handleChangeBody = (value: string) => {
     setBodyValue(value);
     onChangeBody(value);
   };
@@ -94,9 +91,8 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
               />
             </div>
             <HistoryPlugin />
-            <OnChangePlugin onChange={handleChangeBody} />
             <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-            <SaveContentsAsMarkdownPlugin />
+            <MarkdownConverterPlugin onChange={handleChangeBody} />
           </LexicalComposer>
         </div>
       </AppErrorBoundary>

@@ -1,17 +1,16 @@
 import LexicalMarkdownPkg from '@lexical/markdown';
 import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.js';
-import { useSetAtom } from 'jotai/react';
 import { useEffect } from 'react';
-
-import { bodyValueAsMarkdownAtom } from '../atoms/body_value_as_markdown_atom';
 
 const { $convertToMarkdownString } = LexicalMarkdownPkg;
 const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 
-export function SaveContentsAsMarkdownPlugin() {
-  const [editor] = useLexicalComposerContext();
+interface Props {
+  onChange: (markdown: string) => void;
+}
 
-  const setBodyValueAsMarkdown = useSetAtom(bodyValueAsMarkdownAtom);
+export function MarkdownConverterPlugin({ onChange }: Props): null {
+  const [editor] = useLexicalComposerContext();
 
   useEffect(() => {
     const teardown = editor.registerUpdateListener(() => {
@@ -20,14 +19,14 @@ export function SaveContentsAsMarkdownPlugin() {
         // Extra newlines are output during Markdown conversion because of the two \n's in createMarkdownExport().
         // see: https://github.com/facebook/lexical/blob/ffd9521/packages/lexical-markdown/src/MarkdownExport.ts#L55
         markdown = markdown.replace(/\n\n/g, '\n');
-        setBodyValueAsMarkdown(markdown);
+        onChange(markdown);
       });
     });
 
     return () => {
       teardown();
     };
-  }, [editor, setBodyValueAsMarkdown]);
+  }, [editor, onChange]);
 
   return null;
 }
