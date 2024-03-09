@@ -13,7 +13,7 @@ import type { LexicalEditor } from 'lexical';
 import { useState } from 'react';
 import type { ChangeEvent } from 'react';
 
-import AppErrorBoundary from '../../../common_components/AppErrorBoundary';
+import AppErrorBoundary from '../../../components/AppErrorBoundary';
 import { MarkdownConverterPlugin } from '../plugins/MarkdownConverterPlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';
 

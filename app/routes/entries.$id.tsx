@@ -8,7 +8,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
 import type { MicroCmsApiSchema } from '../../types/micro_cms_api_schema.types';
-import Loading from '../common_components/Loading';
+import Loading from '../components/Loading';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';

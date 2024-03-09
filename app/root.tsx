@@ -14,8 +14,8 @@ import classNames from 'classnames';
 import { useAtom, useSetAtom } from 'jotai/react';
 import { useCallback } from 'react';
 
-import Alert from './common_components/Alert';
-import Loading from './common_components/Loading';
+import Alert from './components/Alert';
+import Loading from './components/Loading';
 import { createSupabaseServerClient } from './database/supabase_server_client.server';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 import { commitSession, getSession } from './features/auth/cookie_session_storage.server';

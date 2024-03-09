@@ -8,7 +8,7 @@ import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import Loading from '../common_components/Loading';
+import Loading from '../components/Loading';
 import { getSession } from '../features/auth/cookie_session_storage.server';
 import { bodyValueAsMarkdownAtom } from '../features/editor/atoms/body_value_as_markdown_atom';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
