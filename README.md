@@ -26,6 +26,13 @@ npm run dev
 
 This starts your app in development mode, rebuilding assets on file changes.
 
+### Directory structure
+
+The app directory structure is outlined below:
+
+* app
+  * components: components not related to a domain
+
 ## Deployment
 
 First, build your app for production:
