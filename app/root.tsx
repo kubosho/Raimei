@@ -77,7 +77,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="gap-16 grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
+      <body className="grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
         {alertState == null ? null : (
           <div className="absolute inline-flex inset-x-0 justify-center top-4">
             <Alert
