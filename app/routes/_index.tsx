@@ -39,14 +39,30 @@ export const meta: MetaFunction = () => {
   return [{ title: 'Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
 };
 
-export default function Index() {
-  const { hasSession, microCmsData } = useLoaderData<typeof loader>();
-  const contents = microCmsData?.contents ?? [];
+function LoggedOutIndex(): JSX.Element {
+  return (
+    <>
+      <Header useHeading={false} />
+      <main className="flex items-center mx-2">
+        <div className="bg-yellow-50 border border-yellow-500 flex items-center justify-between max-w-screen-md mx-auto rounded px-8 py-10 w-full">
+          <h1 className="flex font-thin items-center text-4xl">Just Writing.</h1>
+          <Link
+            className="bg-yellow-500 border-2 border-yellow-500 px-4 py-1 rounded text-slate-900"
+            to={{ pathname: '/login' }}
+          >
+            Login
+          </Link>
+        </div>
+      </main>
+    </>
+  );
+}
 
+function LoggedInIndex({ contents }: { contents: MicroCmsApiSchema[] }): JSX.Element {
   return (
     <>
       <Header>
-        <AccountMenu hasSession={hasSession} />
+        <AccountMenu hasSession={true} />
       </Header>
       <main className="pb-16">
         <ul className="max-w-screen-md mx-auto px-2">
@@ -62,4 +78,11 @@ export default function Index() {
       </main>
     </>
   );
+}
+
+export default function Index(): JSX.Element {
+  const { hasSession, microCmsData } = useLoaderData<typeof loader>();
+  const contents = microCmsData?.contents ?? [];
+
+  return hasSession ? <LoggedInIndex contents={contents} /> : <LoggedOutIndex />;
 }
