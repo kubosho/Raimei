@@ -47,14 +47,14 @@ export default function Login() {
   return (
     <>
       <Header />
-      <main>
-        <section className="max-w-screen-md mx-auto px-2">
+      <main className="flex items-center">
+        <section className="max-w-screen-md mx-auto px-2 w-full">
           <h2 className="leading-relaxed text-3xl">Login</h2>
-          <div className="mt-10">
-            <Form action="/login" method="post" className="flex flex-col">
+          <div className="bg-yellow-50 border border-yellow-500 max-w-screen-md mt-8 mx-auto rounded px-8 py-10">
+            <Form action="/login" method="post" className="flex flex-col w-full">
               <label htmlFor="email">Email</label>
               <input
-                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                className="border-b-2 border-slate-500 focus:outline-none px-2 py-1 rounded-none"
                 type="email"
                 name="email"
                 id="email"
@@ -68,14 +68,17 @@ export default function Login() {
                 Password
               </label>
               <input
-                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                className="border-b-2 border-slate-500 focus:outline-none px-2 py-1 rounded-none"
                 type="password"
                 name="password"
                 id="password"
                 defaultValue=""
                 autoComplete="current-password"
               />
-              <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
+              <button
+                type="submit"
+                className="bg-yellow-500 border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900"
+              >
                 Login
               </button>
             </Form>
