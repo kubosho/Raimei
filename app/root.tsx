@@ -76,7 +76,8 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="grid grid-flow-row grid-rows-[auto_1fr] min-h-dvh">
+      <body className="min-h-dvh">
+        <Outlet />
         {alertState == null ? null : (
           <div className="absolute inline-flex inset-x-0 justify-center top-4">
             <Alert
@@ -87,11 +88,13 @@ export default function App() {
             />
           </div>
         )}
-        <Outlet />
         <div
-          className={classNames('absolute bg-opacity-80 bg-slate-100 flex h-full items-center justify-center w-full', {
-            hidden: !isSubmitting,
-          })}
+          className={classNames(
+            'absolute bg-opacity-80 bg-slate-100 flex h-full items-center justify-center left-0 top-0 w-full',
+            {
+              hidden: !isSubmitting,
+            },
+          )}
         >
           <Loading />
         </div>
