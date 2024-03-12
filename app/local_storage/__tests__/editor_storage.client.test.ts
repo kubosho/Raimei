@@ -1,6 +1,10 @@
-import { describe, expect, test } from 'vitest';
+import { afterEach, describe, expect, test } from 'vitest';
 
 import { clearInstance, getInstance } from '../editor_storage.client';
+
+afterEach(() => {
+  clearInstance();
+});
 
 describe('EditorStorage', () => {
   describe('getInstance()', () => {
