@@ -17,7 +17,7 @@ import Editor from '../features/editor/components/Editor';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
-import { getInstance } from '../local_storage/editor_storage.client';
+import { getEditorStorageInstance, initializeEditorStorageInstance } from '../local_storage/editor_storage.client';
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
@@ -51,7 +51,9 @@ export default function Entry() {
   const [titleValue, setTitleValue] = useAtom(titleValueAtom);
 
   const initializeEditorState = useCallback(async () => {
-    const storage = await getInstance();
+    await initializeEditorStorageInstance();
+
+    const storage = await getEditorStorageInstance();
 
     if (microCmsData != null) {
       const value = await storage.get(microCmsData.id);
@@ -77,7 +79,7 @@ export default function Entry() {
         storage.set(microCmsData.id, { title: value, body: bodyValue });
       }
     },
-    [bodyValue, setTitleValue, storage],
+    [bodyValue, microCmsData, setTitleValue, storage],
   );
 
   const handleChangeBody = useCallback(
@@ -88,7 +90,7 @@ export default function Entry() {
         storage.set(microCmsData.id, { title: titleValue, body: value });
       }
     },
-    [setBodyValue, storage, titleValue],
+    [setBodyValue, microCmsData, storage, titleValue],
   );
 
   useEffect(() => {

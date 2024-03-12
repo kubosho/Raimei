@@ -1,4 +1,3 @@
-import { kvsEnvStorage } from '@kvs/env';
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
 import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
@@ -19,7 +18,7 @@ import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientAtom } from '../features/publish/atoms/micro_cms_client_atom';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
-import { getInstance } from '../local_storage/editor_storage.client';
+import { getEditorStorageInstance, initializeEditorStorageInstance } from '../local_storage/editor_storage.client';
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -60,7 +59,9 @@ export default function EntryNew() {
   }, [microCmsClientConfig, setMicroCmsClient]);
 
   const initializeEditorState = useCallback(async () => {
-    const storage = await getInstance();
+    await initializeEditorStorageInstance();
+
+    const storage = await getEditorStorageInstance();
     const value = await storage.get('new');
 
     if (value != null) {

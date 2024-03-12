@@ -30,18 +30,18 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   const currentSession = await getSession(request.headers.get('Cookie'));
   const responseInit: ResponseInit = {};
 
-  {
-    // Initialize TTL cache
-    initializeMicroCmsConfigCacheInstance();
-  }
-
   const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
-  if (supabaseClient == null || session == null) {
+  const userId = session?.get('userId');
+  if (supabaseClient == null || session == null || userId == null) {
     return json({ microCmsClientConfig: null });
   }
 
-  const userId = session.get('userId');
-  const microCmsClientConfig = userId == null ? null : await fetchMicroCmsClientConfig({ supabaseClient, userId });
+  {
+    // Initialize cache
+    initializeMicroCmsConfigCacheInstance();
+  }
+
+  const microCmsClientConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId });
 
   if (currentSession.get('accessToken') !== session.get('accessToken')) {
     responseInit.headers = {

@@ -9,19 +9,27 @@ const KEY = Symbol('EditorStorage');
 
 const _storage = new Map<typeof KEY, Storage>();
 
-export const getInstance = async (): Promise<Storage> => {
-  if (!_storage.has(KEY)) {
-    const storage = await kvsEnvStorage<EditorStorageSchema>({
-      name: 'RaimeiEditor',
-      version: 1,
-    });
+export const initializeEditorStorageInstance = async (): Promise<void> => {
+  if (_storage.get(KEY) != null) {
+    return;
+  }
 
-    _storage.set(KEY, storage);
+  const storage = await kvsEnvStorage<EditorStorageSchema>({
+    name: 'RaimeiEditor',
+    version: 1,
+  });
+
+  _storage.set(KEY, storage);
+};
+
+export const clearEditorStorageInstance = (): void => {
+  _storage.clear();
+};
+
+export const getEditorStorageInstance = (): Storage => {
+  if (!_storage.has(KEY)) {
+    throw new Error('Storage is not initialized, call initializeEditorStorageInstance() first');
   }
 
   return _storage.get(KEY)!;
-};
-
-export const clearInstance = (): void => {
-  _storage.delete(KEY);
 };
