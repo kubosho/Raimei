@@ -106,10 +106,14 @@ export default function SettingsMicroCms(): JSX.Element {
           {!hasSession ? (
             <p>Please log in to view settings.</p>
           ) : (
-            <Form action="/settings" method="post" className="flex flex-col mt-10">
+            <Form
+              action="/settings"
+              method="post"
+              className="bg-yellow-50 border border-yellow-500 flex flex-col max-w-screen-md mt-8 mx-auto rounded px-8 py-10"
+            >
               <label htmlFor="serviceId">microCMS service ID</label>
               <input
-                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                className="border-b-2 border-slate-500 focus:outline-none px-2 py-1 rounded-none"
                 type="text"
                 name="serviceId"
                 id="serviceId"
@@ -120,7 +124,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 microCMS API Endpoint
               </label>
               <input
-                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                className="border-b-2 border-slate-500 focus:outline-none px-2 py-1 rounded-none"
                 type="text"
                 name="endpoint"
                 id="endpoint"
@@ -132,7 +136,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 microCMS API key
               </label>
               <input
-                className="border-b-2 border-slate-500 focus:outline-none py-1"
+                className="border-b-2 border-slate-500 focus:outline-none px-2 py-1 rounded-none"
                 type="text"
                 name="apiKey"
                 id="apiKey"
@@ -140,7 +144,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 autoCapitalize="none"
                 autoCorrect="off"
               />
-              <button type="submit" className="border-2 border-yellow-500 mt-10 px-4 py-1 rounded text-slate-900">
+              <button type="submit" className="bg-yellow-500 mt-10 px-4 py-2 rounded text-slate-900">
                 Submit
               </button>
             </Form>
