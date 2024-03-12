@@ -27,22 +27,21 @@ import stylesheet from './tailwind.css';
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const currentSession = await getSession(request.headers.get('Cookie'));
-  const responseInit: ResponseInit = {};
-
-  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
-  const userId = session?.get('userId');
-  if (supabaseClient == null || session == null || userId == null) {
-    return json({ microCmsClientConfig: null });
-  }
-
   {
     // Initialize cache
     initializeMicroCmsConfigCacheInstance();
   }
 
+  const currentSession = await getSession(request.headers.get('Cookie'));
+  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
+  const userId = session?.get('userId');
+  if (session == null || supabaseClient == null || userId == null) {
+    return json({ microCmsClientConfig: null });
+  }
+
   const microCmsClientConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId });
 
+  const responseInit: ResponseInit = {};
   if (currentSession.get('accessToken') !== session.get('accessToken')) {
     responseInit.headers = {
       ['Set-Cookie']: await commitSession(session),
