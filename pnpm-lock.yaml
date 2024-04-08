@@ -18,8 +18,8 @@ dependencies:
     specifier: ^0.13.1
     version: 0.13.1(lexical@0.13.1)
   '@lexical/list':
-    specifier: ^0.13.1
-    version: 0.13.1(lexical@0.13.1)
+    specifier: ^0.14.3
+    version: 0.14.3
   '@lexical/markdown':
     specifier: ^0.13.1
     version: 0.13.1(@lexical/clipboard@0.13.1)(@lexical/selection@0.13.1)(lexical@0.13.1)
@@ -1185,6 +1185,13 @@ packages:
       lexical: 0.13.1
     dev: false
 
+  /@lexical/list@0.14.3:
+    resolution: {integrity: sha512-d9ZiEkZ34DpzBNq2GkedJpXF8sIxSQvHOGhNbVvTuBvgDcCwbmXL0KY4k+xu+jMScRO/3oR7C6YZpZT3GaUO+Q==}
+    dependencies:
+      '@lexical/utils': 0.14.3
+      lexical: 0.14.3
+    dev: false
+
   /@lexical/mark@0.13.1(lexical@0.13.1):
     resolution: {integrity: sha512-dW27PW8wWDOKFqXTBUuUfV+umU0KfwvXGkPUAxRJrvwUWk5RKaS48LhgbNlQ5BfT84Q8dSiQzvbaa6T40t9a3A==}
     peerDependencies:
@@ -1295,6 +1302,12 @@ packages:
       lexical: 0.13.1
     dev: false
 
+  /@lexical/selection@0.14.3:
+    resolution: {integrity: sha512-43EmqG6flLqFJJNZ7GCxFlx3qXy7osB3AQBgxKTthWtQeBrJPdgacctL1jhO7etTIQWP5C1DExy3opDLVKyDjg==}
+    dependencies:
+      lexical: 0.14.3
+    dev: false
+
   /@lexical/table@0.13.1(lexical@0.13.1):
     resolution: {integrity: sha512-VQzgkfkEmnvn6C64O/kvl0HI3bFoBh3WA/U67ALw+DS11Mb5CKjbt0Gzm/258/reIxNMpshjjicpWMv9Miwauw==}
     peerDependencies:
@@ -1302,6 +1315,13 @@ packages:
     dependencies:
       '@lexical/utils': 0.13.1(lexical@0.13.1)
       lexical: 0.13.1
+    dev: false
+
+  /@lexical/table@0.14.3:
+    resolution: {integrity: sha512-9btpU2lfAE34ucIqlMu5RiSVlxREXY7Zp+s26oFsXNoNPhW57iND96TrqwYo9FJl/6zXXfvqYxnUEcUD2dLgwQ==}
+    dependencies:
+      '@lexical/utils': 0.14.3
+      lexical: 0.14.3
     dev: false
 
   /@lexical/text@0.13.1(lexical@0.13.1):
@@ -1321,6 +1341,15 @@ packages:
       '@lexical/selection': 0.13.1(lexical@0.13.1)
       '@lexical/table': 0.13.1(lexical@0.13.1)
       lexical: 0.13.1
+    dev: false
+
+  /@lexical/utils@0.14.3:
+    resolution: {integrity: sha512-coqG2AO7QhJCM0xBlYvtETjl0il9u4HQRuc8ye3j8jMfNadVvVVWO3Fodmm/8FTPyJuxIij1Ruma9zqhlAbN6Q==}
+    dependencies:
+      '@lexical/list': 0.14.3
+      '@lexical/selection': 0.14.3
+      '@lexical/table': 0.14.3
+      lexical: 0.14.3
     dev: false
 
   /@lexical/yjs@0.13.1(lexical@0.13.1)(yjs@13.6.12):
@@ -4833,6 +4862,10 @@ packages:
 
   /lexical@0.13.1:
     resolution: {integrity: sha512-jaqRYzVEfBKbX4FwYpd/g+MyOjRaraAel0iQsTrwvx3hyN0bswUZuzb6H6nGlFSjcdrc77wKpyKwoWj4aUd+Bw==}
+    dev: false
+
+  /lexical@0.14.3:
+    resolution: {integrity: sha512-LaWSKj6OpvJ+bdfQA2AybEzho0YoWfAdRGkuCtPNYd/uf7IHyoEwCFQsIBvWCQF23saDgE1NONR4uiwl6iaJ9g==}
     dev: false
 
   /lib0@0.2.88:
