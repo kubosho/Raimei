@@ -32,7 +32,7 @@
     "isbot": "^5.1.4",
     "jotai": "^2.6.5",
     "lexical": "^0.13.1",
-    "microcms-js-sdk": "^2.7.0",
+    "microcms-js-sdk": "^3.1.1",
     "react": "canary",
     "react-dom": "canary",
     "react-error-boundary": "^4.0.13",
