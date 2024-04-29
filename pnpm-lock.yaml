@@ -136,6 +136,9 @@ devDependencies:
   happy-dom:
     specifier: ^13.6.0
     version: 13.6.0
+  mockdate:
+    specifier: ^3.0.5
+    version: 3.0.5
   msw:
     specifier: ^2.2.3
     version: 2.2.3(typescript@5.3.3)
@@ -5514,6 +5517,10 @@ packages:
       pathe: 1.1.2
       pkg-types: 1.0.3
       ufo: 1.4.0
+    dev: true
+
+  /mockdate@3.0.5:
+    resolution: {integrity: sha512-iniQP4rj1FhBdBYS/+eQv7j1tadJ9lJtdzgOpvsOHng/GbcDh2Fhdeq+ZRldrPYdXvCyfFUmFeEwEGXZB5I/AQ==}
     dev: true
 
   /modern-ahocorasick@1.0.1:
