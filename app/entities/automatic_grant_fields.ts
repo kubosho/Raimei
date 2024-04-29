@@ -1,9 +1,9 @@
 export type AutomaticGrantFields = {
   id: string;
 
-  createdAt: number;
-  updatedAt: number;
+  createdAt: string;
+  updatedAt: string;
 
-  publishedAt: number;
-  revisedAt: number;
+  publishedAt: string;
+  revisedAt: string;
 };
