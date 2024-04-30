@@ -1,9 +1,9 @@
 import { Factory } from 'fishery';
 
-import { resetMockDate, setMockDate } from '../../../constants/mock_date';
-import type { AutomaticGrantFields } from '../../../entities/automatic_grant_fields';
-import type { EntryData, EntrySchema } from '../../../entities/entry_data';
-import type { Image } from '../../../entities/image';
+import { resetMockDate, setMockDate } from '../../constants/mock_date';
+import type { AutomaticGrantFields } from '../../entities/automatic_grant_fields';
+import type { EntryData, EntrySchema } from '../../entities/entry_data';
+import type { Image } from '../../entities/image';
 
 export const imageFactory = Factory.define<Image>(({ sequence }) => {
   return {

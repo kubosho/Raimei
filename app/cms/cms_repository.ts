@@ -1,4 +1,4 @@
-import type { EntryData, EntrySchema } from '../../entities/entry_data';
+import type { EntryData, EntrySchema } from '../entities/entry_data';
 
 import { API_KEY_HEADER } from './api_key_header';
 
