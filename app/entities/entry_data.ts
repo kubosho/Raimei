@@ -1,7 +1,7 @@
 import type { AutomaticGrantFields } from './automatic_grant_fields';
 import type { Image } from './image';
 
-export type EntryData = AutomaticGrantFields & {
+export type EntrySchema = {
   title: string;
   body: string;
   excerpt?: string;
@@ -12,3 +12,5 @@ export type EntryData = AutomaticGrantFields & {
   categories?: string[] | null;
   tags?: string[] | null;
 };
+
+export type EntryData = AutomaticGrantFields & EntrySchema;
