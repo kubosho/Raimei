@@ -2,6 +2,9 @@ import type { EntryData, EntrySchema } from '../entities/entry_data';
 
 import { API_KEY_HEADER } from './api_key_header';
 
+const key = { key: Symbol('CmsContentsRepository') };
+const instance = new WeakMap<typeof key, CmsContentsRepository>();
+
 export type CreateCmsContentsResponse = {
   id: string;
 };
@@ -71,6 +74,9 @@ export interface CmsContentsRepository {
   fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse>;
 }
 
-export const createCmsContentsRepository = (options: CmsContentsRepositoryOptions): CmsContentsRepository => {
-  return new CmsContentsRepositoryImpl(options);
+export const initialCmsContentsRepository = (options: CmsContentsRepositoryOptions): void => {
+  const repository = new CmsContentsRepositoryImpl(options);
+  instance.set(key, repository);
 };
+
+export const cmsContentsRepository = (): CmsContentsRepository | null => instance.get(key) ?? null;

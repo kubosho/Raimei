@@ -7,7 +7,7 @@ import { getCmsContentsListResponseFactory } from '../__mock__/get_cms_contents_
 import { MOCK_API_KEY } from '../__mock__/mock_cms_api_key';
 import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mock__/mock_cms_api_params';
 import { getCmsApiUrl } from '../cms_api_url';
-import { createCmsContentsRepository } from '../cms_contents_repository';
+import { cmsContentsRepository, initialCmsContentsRepository } from '../cms_contents_repository';
 
 const CMS_API_URL = getCmsApiUrl({ endpoint: MOCK_CMS_API_ENDPOINT, serviceId: MOCK_CMS_SERVICE_ID });
 
@@ -17,11 +17,10 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-describe('CmsRepository', () => {
-  describe('fetchContents', async () => {
+describe('CmsContentsRepository', () => {
+  describe('#fetch', async () => {
     it('should fetch contents from microCMS API', async () => {
       // Given
-      const cmsRepository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const contentsListResponse = getCmsContentsListResponseFactory.build();
       server.use(
         http.get(CMS_API_URL, () => {
@@ -30,17 +29,18 @@ describe('CmsRepository', () => {
       );
 
       // When
-      const response = await cmsRepository.fetch({});
+      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const repository = cmsContentsRepository();
+      const response = await repository?.fetch({});
 
       // Then
       expect(response).toEqual(contentsListResponse);
     });
   });
 
-  describe('createContents', async () => {
+  describe('#create', async () => {
     it('should create contents in microCMS', async () => {
       // Given
-      const cmsRepository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const contents = entrySchemaFactory.build();
       const { id } = entryDataFactory.build();
       const createContentsResponse = { id };
@@ -51,7 +51,9 @@ describe('CmsRepository', () => {
       );
 
       // When
-      const response = await cmsRepository.create(contents, {});
+      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const repository = cmsContentsRepository();
+      const response = await repository?.create(contents, {});
 
       // Then
       expect(response).toEqual(createContentsResponse);
