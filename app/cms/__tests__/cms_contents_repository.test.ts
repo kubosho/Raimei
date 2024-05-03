@@ -36,6 +36,25 @@ describe('CmsContentsRepository', () => {
       // Then
       expect(response).toEqual(contentsListResponse);
     });
+
+    it('should fetch single contents from microCMS API', async () => {
+      // Given
+      const entryData = entryDataFactory.build();
+      const contentsResponse = entryData;
+      server.use(
+        http.get(`${CMS_API_URL}${entryData.id}`, () => {
+          return HttpResponse.json(contentsResponse);
+        }),
+      );
+
+      // When
+      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const repository = cmsContentsRepository();
+      const response = await repository?.fetch({ contentsId: entryData.id });
+
+      // Then
+      expect(response).toEqual(contentsResponse);
+    });
   });
 
   describe('#create', async () => {

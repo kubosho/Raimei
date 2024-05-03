@@ -5,17 +5,6 @@ import { API_KEY_HEADER } from './api_key_header';
 const key = { key: Symbol('CmsContentsRepository') };
 const instance = new WeakMap<typeof key, CmsContentsRepository>();
 
-export type CreateCmsContentsResponse = {
-  id: string;
-};
-
-export type GetCmsContentsListResponse = {
-  contents: EntryData[];
-  totalCount: number;
-  offset: number;
-  limit: number;
-};
-
 export type CreateCmsContentsOptions = {
   abortSignal?: AbortSignal;
   contentsId?: string;
@@ -32,6 +21,23 @@ export type CmsContentsRepositoryOptions = {
   apiKey: string;
   apiUrl: string;
 };
+
+export type CreateCmsContentsResponse = {
+  id: string;
+};
+
+export type GetCmsContentsListResponse = {
+  contents: EntryData[];
+  totalCount: number;
+  offset: number;
+  limit: number;
+};
+
+export type GetCmsContentsResponse = EntryData;
+
+type CmsContentsResponse<T extends FetchCmsContentsOptions> = T['contentsId'] extends string | undefined
+  ? GetCmsContentsResponse
+  : GetCmsContentsListResponse;
 
 class CmsContentsRepositoryImpl implements CmsContentsRepository {
   private _options: CmsContentsRepositoryOptions;
@@ -55,7 +61,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
     return response.json();
   }
 
-  async fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse> {
+  async fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>> {
     const contentsId = options.contentsId == null ? '' : options.contentsId;
     const response = await fetch(`${this._options.apiUrl}${contentsId}`, {
       headers: {
@@ -71,7 +77,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
 
 export interface CmsContentsRepository {
   create(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
-  fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse>;
+  fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>>;
 }
 
 export const initialCmsContentsRepository = (options: CmsContentsRepositoryOptions): void => {
