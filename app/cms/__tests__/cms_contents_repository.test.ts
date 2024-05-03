@@ -7,7 +7,7 @@ import { getCmsContentsListResponseFactory } from '../__mock__/get_cms_contents_
 import { MOCK_API_KEY } from '../__mock__/mock_cms_api_key';
 import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mock__/mock_cms_api_params';
 import { getCmsApiUrl } from '../cms_api_url';
-import { createCmsRepository } from '../cms_repository';
+import { createCmsContentsRepository } from '../cms_contents_repository';
 
 const CMS_API_URL = getCmsApiUrl({ endpoint: MOCK_CMS_API_ENDPOINT, serviceId: MOCK_CMS_SERVICE_ID });
 
@@ -21,7 +21,7 @@ describe('CmsRepository', () => {
   describe('fetchContents', async () => {
     it('should fetch contents from microCMS API', async () => {
       // Given
-      const cmsRepository = createCmsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const cmsRepository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const contentsListResponse = getCmsContentsListResponseFactory.build();
       server.use(
         http.get(CMS_API_URL, () => {
@@ -30,7 +30,7 @@ describe('CmsRepository', () => {
       );
 
       // When
-      const response = await cmsRepository.fetchContents({});
+      const response = await cmsRepository.fetch({});
 
       // Then
       expect(response).toEqual(contentsListResponse);
@@ -40,7 +40,7 @@ describe('CmsRepository', () => {
   describe('createContents', async () => {
     it('should create contents in microCMS', async () => {
       // Given
-      const cmsRepository = createCmsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const cmsRepository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const contents = entrySchemaFactory.build();
       const { id } = entryDataFactory.build();
       const createContentsResponse = { id };
@@ -51,7 +51,7 @@ describe('CmsRepository', () => {
       );
 
       // When
-      const response = await cmsRepository.createContents(contents, {});
+      const response = await cmsRepository.create(contents, {});
 
       // Then
       expect(response).toEqual(createContentsResponse);

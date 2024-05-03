@@ -1,6 +1,6 @@
 import { Factory } from 'fishery';
 
-import type { GetCmsContentsListResponse } from '../cms_repository';
+import type { GetCmsContentsListResponse } from '../cms_contents_repository';
 import { entryDataFactory } from './entry_data_factory';
 
 export const getCmsContentsListResponseFactory = Factory.define<GetCmsContentsListResponse>(() => ({

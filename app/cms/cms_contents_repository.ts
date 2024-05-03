@@ -24,19 +24,19 @@ export type FetchCmsContentsOptions = {
   headers?: HeadersInit;
 };
 
-export type CmsRepositoryOptions = {
+export type CmsContentsRepositoryOptions = {
   apiKey: string;
   apiUrl: string;
 };
 
-class CmsRepositoryImpl implements CmsRepository {
-  private _options: CmsRepositoryOptions;
+class CmsContentsRepositoryImpl implements CmsContentsRepository {
+  private _options: CmsContentsRepositoryOptions;
 
-  constructor(options: CmsRepositoryOptions) {
+  constructor(options: CmsContentsRepositoryOptions) {
     this._options = options;
   }
 
-  async createContents(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse> {
+  async create(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse> {
     const response = await fetch(this._options.apiUrl, {
       method: options.contentsId == null ? 'POST' : 'PUT',
       headers: {
@@ -51,7 +51,7 @@ class CmsRepositoryImpl implements CmsRepository {
     return response.json();
   }
 
-  async fetchContents(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse> {
+  async fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse> {
     const response = await fetch(this._options.apiUrl, {
       headers: {
         [API_KEY_HEADER]: this._options.apiKey,
@@ -64,11 +64,11 @@ class CmsRepositoryImpl implements CmsRepository {
   }
 }
 
-export interface CmsRepository {
-  createContents(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
-  fetchContents(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse>;
+export interface CmsContentsRepository {
+  create(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
+  fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse>;
 }
 
-export const createCmsRepository = (options: CmsRepositoryOptions): CmsRepository => {
-  return new CmsRepositoryImpl(options);
+export const createCmsContentsRepository = (options: CmsContentsRepositoryOptions): CmsContentsRepository => {
+  return new CmsContentsRepositoryImpl(options);
 };
