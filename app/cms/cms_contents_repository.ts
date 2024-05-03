@@ -21,6 +21,7 @@ export type CreateCmsContentsOptions = {
 
 export type FetchCmsContentsOptions = {
   abortSignal?: AbortSignal;
+  contentsId?: string;
   headers?: HeadersInit;
 };
 
@@ -52,7 +53,8 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
   }
 
   async fetch(options: FetchCmsContentsOptions): Promise<GetCmsContentsListResponse> {
-    const response = await fetch(this._options.apiUrl, {
+    const contentsId = options.contentsId == null ? '' : options.contentsId;
+    const response = await fetch(`${this._options.apiUrl}${contentsId}`, {
       headers: {
         [API_KEY_HEADER]: this._options.apiKey,
         ...options.headers,
