@@ -42,7 +42,7 @@ describe('CmsContentsRepository', () => {
       const entryData = entryDataFactory.build();
       const contentsResponse = entryData;
       server.use(
-        http.get(`${CMS_API_URL}${entryData.id}`, () => {
+        http.get(`${CMS_API_URL}/${entryData.id}`, () => {
           return HttpResponse.json(contentsResponse);
         }),
       );

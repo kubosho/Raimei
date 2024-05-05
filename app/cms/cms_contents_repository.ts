@@ -63,7 +63,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
 
   async fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>> {
     const contentsId = options.contentsId == null ? '' : options.contentsId;
-    const response = await fetch(`${this._options.apiUrl}${contentsId}`, {
+    const response = await fetch(`${this._options.apiUrl}/${contentsId}`, {
       headers: {
         [API_KEY_HEADER]: this._options.apiKey,
         ...options.headers,
