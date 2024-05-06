@@ -68,6 +68,9 @@ dependencies:
   react-error-boundary:
     specifier: ^4.0.13
     version: 4.0.13(react@18.3.0-canary-59831c98c-20240218)
+  remix-auth:
+    specifier: ^3.6.0
+    version: 3.6.0(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2)
   remix-utils:
     specifier: ^7.5.0
     version: 7.5.0(@remix-run/node@2.7.2)(@remix-run/react@2.7.2)(react@18.3.0-canary-59831c98c-20240218)
@@ -6428,6 +6431,17 @@ packages:
       unified: 10.1.2
     dev: true
 
+  /remix-auth@3.6.0(@remix-run/react@2.7.2)(@remix-run/server-runtime@2.7.2):
+    resolution: {integrity: sha512-mxlzLYi+/GKQSaXIqIw15dxAT1wm+93REAeDIft2unrKDYnjaGhhpapyPhdbALln86wt9lNAk21znfRss3fG7Q==}
+    peerDependencies:
+      '@remix-run/react': ^1.0.0 || ^2.0.0
+      '@remix-run/server-runtime': ^1.0.0 || ^2.0.0
+    dependencies:
+      '@remix-run/react': 2.7.2(react-dom@18.3.0-canary-59831c98c-20240218)(react@18.3.0-canary-59831c98c-20240218)(typescript@5.3.3)
+      '@remix-run/server-runtime': 2.7.2(typescript@5.3.3)
+      uuid: 8.3.2
+    dev: false
+
   /remix-utils@7.5.0(@remix-run/node@2.7.2)(@remix-run/react@2.7.2)(react@18.3.0-canary-59831c98c-20240218):
     resolution: {integrity: sha512-vzjDhbdwK+3XxqL2LM7ZPzq0zyjb+77eAWbKhDqhnh0nlA11n3CmTtYzrZYpVf6h24+6m5mD6KnRfcdD3Zrl7w==}
     engines: {node: '>=18.0.0'}
@@ -7349,6 +7363,11 @@ packages:
   /utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+
+  /uuid@8.3.2:
+    resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
+    hasBin: true
+    dev: false
 
   /uvu@0.5.6:
     resolution: {integrity: sha512-+g8ENReyr8YsOc6fv/NVJs2vFdHBnBNdfE49rshrTzDWOlUx4Gq7KOS2GD8eqhy2j+Ejq29+SbKH8yjkAqXqoA==}
