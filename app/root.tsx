@@ -14,6 +14,8 @@ import classNames from 'classnames';
 import { useAtom, useSetAtom } from 'jotai/react';
 import { useCallback } from 'react';
 
+import { getCmsApiUrl } from './cms/cms_api_url';
+import { initialCmsContentsRepository } from './cms/cms_contents_repository';
 import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { createSupabaseServerClient } from './database/supabase_server_client.server';
@@ -48,7 +50,22 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     };
   }
 
-  return json({ microCmsClientConfig }, responseInit);
+  if (microCmsClientConfig != null) {
+    initialCmsContentsRepository({
+      apiKey: microCmsClientConfig.apiKey,
+      apiUrl: getCmsApiUrl({
+        endpoint: microCmsClientConfig.endpoint,
+        serviceId: microCmsClientConfig.serviceId,
+      }),
+    });
+  }
+
+  return json(
+    {
+      microCmsClientConfig,
+    },
+    responseInit,
+  );
 };
 
 export default function App() {
