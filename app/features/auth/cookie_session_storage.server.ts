@@ -19,5 +19,3 @@ export const cookieSessionStorage = createCookieSessionStorage<SessionData, Sess
     secure: true,
   },
 });
-
-export const { getSession, commitSession, destroySession } = cookieSessionStorage;
