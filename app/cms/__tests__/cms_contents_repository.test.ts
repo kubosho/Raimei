@@ -7,7 +7,7 @@ import { getCmsContentsListResponseFactory } from '../__mock__/get_cms_contents_
 import { MOCK_API_KEY } from '../__mock__/mock_cms_api_key';
 import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mock__/mock_cms_api_params';
 import { getCmsApiUrl } from '../cms_api_url';
-import { cmsContentsRepository, initialCmsContentsRepository } from '../cms_contents_repository';
+import { createCmsContentsRepository } from '../cms_contents_repository';
 
 const CMS_API_URL = getCmsApiUrl({ endpoint: MOCK_CMS_API_ENDPOINT, serviceId: MOCK_CMS_SERVICE_ID });
 
@@ -29,8 +29,7 @@ describe('CmsContentsRepository', () => {
       );
 
       // When
-      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
-      const repository = cmsContentsRepository();
+      const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const response = await repository?.fetch({});
 
       // Then
@@ -48,8 +47,7 @@ describe('CmsContentsRepository', () => {
       );
 
       // When
-      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
-      const repository = cmsContentsRepository();
+      const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const response = await repository?.fetch({ contentsId: entryData.id });
 
       // Then
@@ -70,8 +68,7 @@ describe('CmsContentsRepository', () => {
       );
 
       // When
-      initialCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
-      const repository = cmsContentsRepository();
+      const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
       const response = await repository?.create(contents, {});
 
       // Then
