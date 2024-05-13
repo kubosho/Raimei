@@ -1,21 +1,41 @@
 import { json } from '@remix-run/node';
-import type { MetaFunction } from '@remix-run/node';
+import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 
-import { cmsContentsRepository } from '../cms/cms_contents_repository';
-import { EntryData } from '../entities/entry_data';
+import { getCmsApiUrl } from '../cms/cms_api_url';
+import { createCmsContentsRepository } from '../cms/cms_contents_repository';
+import { createSupabaseServerClient } from '../database/supabase_server_client.server';
+import type { EntryData } from '../entities/entry_data';
+import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
+import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 
-export const loader = async () => {
-  const repository = cmsContentsRepository();
-  if (repository == null) {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
     return json({
       contents: null,
       hasSession: false,
     });
   }
 
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  if (microCmsConfig == null) {
+    return json({
+      contents: null,
+      hasSession: true,
+    });
+  }
+
+  const repository = createCmsContentsRepository({
+    apiKey: microCmsConfig.apiKey,
+    apiUrl: getCmsApiUrl({
+      endpoint: microCmsConfig.endpoint,
+      serviceId: microCmsConfig.serviceId,
+    }),
+  });
   const contents = await repository.fetch({});
 
   return json({
