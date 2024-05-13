@@ -6,25 +6,45 @@ import { useAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import { cmsContentsRepository } from '../cms/cms_contents_repository';
+import { getCmsApiUrl } from '../cms/cms_api_url';
+import { createCmsContentsRepository } from '../cms/cms_contents_repository';
 import Loading from '../components/Loading';
+import { createSupabaseServerClient } from '../database/supabase_server_client.server';
+import { authenticator } from '../features/auth/auth.server';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import Editor from '../features/editor/components/Editor';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
+import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 import { getEditorStorageInstance, initializeEditorStorageInstance } from '../local_storage/editor_storage.client';
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
-export const loader = async ({ params }: LoaderFunctionArgs) => {
-  const repository = cmsContentsRepository();
-  if (repository == null) {
+export const loader = async ({ params, request }: LoaderFunctionArgs) => {
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
     return json({
       contents: null,
       hasSession: false,
     });
   }
 
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  if (microCmsConfig == null) {
+    return json({
+      contents: null,
+      hasSession: true,
+    });
+  }
+
+  const repository = createCmsContentsRepository({
+    apiKey: microCmsConfig.apiKey,
+    apiUrl: getCmsApiUrl({
+      endpoint: microCmsConfig.endpoint,
+      serviceId: microCmsConfig.serviceId,
+    }),
+  });
   const contents = await repository.fetch({
     contentsId: params.id,
   });
