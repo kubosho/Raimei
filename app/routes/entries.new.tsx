@@ -1,27 +1,46 @@
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
 import { json } from '@remix-run/node';
-import type { ActionFunctionArgs, MetaFunction } from '@remix-run/node';
+import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
 import { useAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import { cmsContentsRepository } from '../cms/cms_contents_repository';
+import { getCmsApiUrl } from '../cms/cms_api_url';
+import { createCmsContentsRepository } from '../cms/cms_contents_repository';
 import Loading from '../components/Loading';
+import { createSupabaseServerClient } from '../database/supabase_server_client.server';
+import { authenticator } from '../features/auth/auth.server';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import Editor from '../features/editor/components/Editor';
 import SubmitButton from '../features/editor/components/SubmitButton';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
+import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 import { getEditorStorageInstance, initializeEditorStorageInstance } from '../local_storage/editor_storage.client';
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const repository = cmsContentsRepository();
-  if (repository == null) {
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
     return null;
   }
+
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  if (microCmsConfig == null) {
+    return null;
+  }
+
+  const repository = createCmsContentsRepository({
+    apiKey: microCmsConfig.apiKey,
+    apiUrl: getCmsApiUrl({
+      endpoint: microCmsConfig.endpoint,
+      serviceId: microCmsConfig.serviceId,
+    }),
+  });
 
   const body = await request.formData();
   const title = body.get('title') as string;
@@ -40,16 +59,10 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return res;
 };
 
-export const loader = async () => {
-  const repository = cmsContentsRepository();
-  if (repository == null) {
-    return json({
-      hasSession: false,
-    });
-  }
-
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userData = await authenticator.isAuthenticated(request);
   return json({
-    hasSession: true,
+    hasSession: userData != null,
   });
 };
 
