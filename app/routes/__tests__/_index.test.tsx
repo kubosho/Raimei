@@ -4,7 +4,7 @@ import { getByRole, render, waitFor } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 
-import { MicroCmsDataFactory } from '../../features/publish/__mocks__/micro_cms_data_factory';
+import { entryDataFactory } from '../../cms/__mock__/entry_data_factory';
 import Index from '../_index';
 
 const server = setupServer();
@@ -29,7 +29,10 @@ describe('Index', () => {
         path: '/',
         Component: Index,
         loader() {
-          return json({ hasSession: false, microCmsData: null });
+          return json({
+            contents: null,
+            hasSession: false,
+          });
         },
       },
     ]);
@@ -48,7 +51,10 @@ describe('Index', () => {
         path: '/',
         Component: Index,
         loader() {
-          return json({ hasSession: true, microCmsData: null });
+          return json({
+            contents: null,
+            hasSession: true,
+          });
         },
       },
     ]);
@@ -62,6 +68,7 @@ describe('Index', () => {
 
   test('it a session and microCMS data exist, a list of article titles is displayed', async () => {
     // Given
+    const contents = entryDataFactory.buildList(1);
     const RemixStub = createRemixStub([
       {
         path: '/',
@@ -69,12 +76,8 @@ describe('Index', () => {
         loader() {
           return json({
             hasSession: true,
-            microCmsData: {
-              contents: [
-                MicroCmsDataFactory.build({
-                  title: '2022年の振り返り',
-                }),
-              ],
+            contents: {
+              contents,
             },
           });
         },
@@ -85,6 +88,6 @@ describe('Index', () => {
     const { container } = render(<RemixStub />);
 
     // Then
-    await waitFor(() => expect(getByRole(container, 'link', { name: '2022年の振り返り' })).not.toBe(null));
+    await waitFor(() => expect(getByRole(container, 'link', { name: contents[0].title })).not.toBe(null));
   });
 });

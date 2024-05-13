@@ -1,37 +1,46 @@
 import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
-import { createClient } from 'microcms-js-sdk';
 
-import type { MicroCmsApiSchema } from '../../types/micro_cms_api_schema.types';
+import { getCmsApiUrl } from '../cms/cms_api_url';
+import { createCmsContentsRepository } from '../cms/cms_contents_repository';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
-import { getSession } from '../features/auth/cookie_session_storage.server';
+import type { EntryData } from '../entities/entry_data';
+import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const currentSession = await getSession(request.headers.get('Cookie'));
-  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
-  const userId = session?.get('userId');
-  if (supabaseClient == null || session == null || userId == null) {
-    return json({ hasSession: false, microCmsData: null });
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
+    return json({
+      contents: null,
+      hasSession: false,
+    });
   }
 
-  const config = await fetchMicroCmsClientConfig({ supabaseClient, userId });
-  if (config == null || config.apiKey === '' || config.serviceId === '') {
-    return json({ hasSession: true, microCmsData: null });
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  if (microCmsConfig == null) {
+    return json({
+      contents: null,
+      hasSession: true,
+    });
   }
 
-  const client = createClient({
-    apiKey: config.apiKey,
-    serviceDomain: config.serviceId,
+  const repository = createCmsContentsRepository({
+    apiKey: microCmsConfig.apiKey,
+    apiUrl: getCmsApiUrl({
+      endpoint: microCmsConfig.endpoint,
+      serviceId: microCmsConfig.serviceId,
+    }),
   });
-  const microCmsData = await client.getList<MicroCmsApiSchema>({ endpoint: config.endpoint });
+  const contents = await repository.fetch({});
 
   return json({
+    contents,
     hasSession: true,
-    microCmsData,
   });
 };
 
@@ -55,7 +64,7 @@ function LoggedOutIndex(): JSX.Element {
   );
 }
 
-function LoggedInIndex({ contents }: { contents: MicroCmsApiSchema[] }): JSX.Element {
+function LoggedInIndex({ contents }: { contents: EntryData[] }): JSX.Element {
   return (
     <>
       <Header>
@@ -80,8 +89,7 @@ function LoggedInIndex({ contents }: { contents: MicroCmsApiSchema[] }): JSX.Ele
 }
 
 export default function Index(): JSX.Element {
-  const { hasSession, microCmsData } = useLoaderData<typeof loader>();
-  const contents = microCmsData?.contents ?? [];
+  const { contents, hasSession } = useLoaderData<typeof loader>();
 
-  return hasSession ? <LoggedInIndex contents={contents} /> : <LoggedOutIndex />;
+  return hasSession ? <LoggedInIndex contents={contents?.contents ?? []} /> : <LoggedOutIndex />;
 }

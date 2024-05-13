@@ -3,14 +3,14 @@ import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { useAtom } from 'jotai/react';
-import { createClient } from 'microcms-js-sdk';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import type { MicroCmsApiSchema } from '../../types/micro_cms_api_schema.types';
+import { getCmsApiUrl } from '../cms/cms_api_url';
+import { createCmsContentsRepository } from '../cms/cms_contents_repository';
 import Loading from '../components/Loading';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
-import { getSession } from '../features/auth/cookie_session_storage.server';
+import { authenticator } from '../features/auth/auth.server';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import Editor from '../features/editor/components/Editor';
@@ -21,29 +21,42 @@ import { getEditorStorageInstance, initializeEditorStorageInstance } from '../lo
 import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
 
 export const loader = async ({ params, request }: LoaderFunctionArgs) => {
-  const currentSession = await getSession(request.headers.get('Cookie'));
-  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
-  const userId = session?.get('userId');
-  if (supabaseClient == null || session == null || userId == null) {
-    return json({ hasSession: false, microCmsData: null });
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
+    return json({
+      contents: null,
+      hasSession: false,
+    });
   }
 
-  const config = await fetchMicroCmsClientConfig({ supabaseClient, userId });
-  if (config == null || config.apiKey === '' || config.serviceId === '') {
-    return json({ hasSession: true, microCmsData: null });
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  if (microCmsConfig == null) {
+    return json({
+      contents: null,
+      hasSession: true,
+    });
   }
 
-  const client = createClient({
-    apiKey: config.apiKey,
-    serviceDomain: config.serviceId,
+  const repository = createCmsContentsRepository({
+    apiKey: microCmsConfig.apiKey,
+    apiUrl: getCmsApiUrl({
+      endpoint: microCmsConfig.endpoint,
+      serviceId: microCmsConfig.serviceId,
+    }),
   });
-  const microCmsData = await client.get<MicroCmsApiSchema>({ endpoint: config.endpoint, contentId: params.id });
+  const contents = await repository.fetch({
+    contentsId: params.id,
+  });
 
-  return json({ hasSession: true, microCmsData });
+  return json({
+    contents,
+    hasSession: true,
+  });
 };
 
 export default function Entry() {
-  const { hasSession, microCmsData } = useLoaderData<typeof loader>();
+  const { contents, hasSession } = useLoaderData<typeof loader>();
 
   const [storage, setStorage] = useState<KvsEnvStorage<EditorStorageSchema> | null>(null);
 
@@ -55,42 +68,42 @@ export default function Entry() {
 
     const storage = await getEditorStorageInstance();
 
-    if (microCmsData != null) {
-      const value = await storage.get(microCmsData.id);
+    if (contents != null) {
+      const value = await storage.get(contents?.id);
 
       if (value != null) {
         setBodyValue(value.body);
         setTitleValue(value.title);
-      } else if (microCmsData != null) {
-        setBodyValue(microCmsData.body);
-        setTitleValue(microCmsData.title);
-        storage.set(microCmsData.id, { title: microCmsData.title, body: microCmsData.body });
+      } else if (contents != null) {
+        setBodyValue(contents.body);
+        setTitleValue(contents.title);
+        storage.set(contents.id, { title: contents.title, body: contents.body });
       }
     }
 
     setStorage(storage);
-  }, [microCmsData, setBodyValue, setTitleValue]);
+  }, [contents, setBodyValue, setTitleValue]);
 
   const handleChangeTitle = useCallback(
     async (value: string) => {
       setTitleValue(value);
 
-      if (microCmsData != null && storage != null) {
-        storage.set(microCmsData.id, { title: value, body: bodyValue });
+      if (contents != null && storage != null) {
+        storage.set(contents.id, { title: value, body: bodyValue });
       }
     },
-    [bodyValue, microCmsData, setTitleValue, storage],
+    [bodyValue, contents, setTitleValue, storage],
   );
 
   const handleChangeBody = useCallback(
     async (value: string) => {
       setBodyValue(value);
 
-      if (microCmsData != null && storage != null) {
-        storage.set(microCmsData.id, { title: titleValue, body: value });
+      if (contents != null && storage != null) {
+        storage.set(contents.id, { title: titleValue, body: value });
       }
     },
-    [setBodyValue, microCmsData, storage, titleValue],
+    [setBodyValue, contents, storage, titleValue],
   );
 
   useEffect(() => {

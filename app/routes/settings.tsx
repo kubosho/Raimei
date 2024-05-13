@@ -7,28 +7,22 @@ import { useEffect } from 'react';
 
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
 import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
-import { getSession } from '../features/auth/cookie_session_storage.server';
+import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
-import { clearMicroCmsConfigCacheInstance } from '../local_storage/micro_cms_config_cache.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const session = await getSession(request.headers.get('Cookie'));
-
-  const userId = session.get('userId');
+  const userData = await authenticator.isAuthenticated(request);
 
   return json({
-    userId,
+    hasSession: userData != null,
   });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
-  const currentSession = await getSession(request.headers.get('Cookie'));
-  const accessToken = currentSession.get('accessToken') ?? null;
-  const userId = currentSession.get('userId');
-
-  if (accessToken == null || userId == null) {
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
     return json({
       data: null,
       error: {
@@ -38,7 +32,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
     });
   }
 
-  const { supabaseClient } = await createSupabaseServerClient(currentSession);
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
   if (supabaseClient == null) {
     // TODO: Offline error handling
     return json({
@@ -54,12 +48,13 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const { data, error } = await supabaseClient
     .from('micro_cms_configs')
-    .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userId })
+    .upsert({ api_key: apiKey, endpoint, service_id: serviceId, supabase_user_id: userData.user.id })
     .select();
 
-  clearMicroCmsConfigCacheInstance();
-
-  return json({ data, error });
+  return json({
+    data,
+    error,
+  });
 };
 
 export const meta: MetaFunction = () => {
@@ -68,8 +63,7 @@ export const meta: MetaFunction = () => {
 
 export default function SettingsMicroCms(): JSX.Element {
   const actionData = useActionData<typeof action>();
-  const { userId } = useLoaderData<typeof loader>();
-  const hasSession = userId != null;
+  const { hasSession } = useLoaderData<typeof loader>();
 
   const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
 

@@ -6,7 +6,7 @@ import type { SessionData, SessionFlashData } from './session_type.server';
 
 const SESSION_KEY = process.env.SESSION_KEY as string;
 
-const { getSession, commitSession, destroySession } = createCookieSessionStorage<SessionData, SessionFlashData>({
+export const cookieSessionStorage = createCookieSessionStorage<SessionData, SessionFlashData>({
   cookie: {
     name: '__session',
 
@@ -19,5 +19,3 @@ const { getSession, commitSession, destroySession } = createCookieSessionStorage
     secure: true,
   },
 });
-
-export { getSession, commitSession, destroySession };

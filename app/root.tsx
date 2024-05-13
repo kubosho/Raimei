@@ -18,41 +18,28 @@ import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { createSupabaseServerClient } from './database/supabase_server_client.server';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
-import { commitSession, getSession } from './features/auth/cookie_session_storage.server';
+import { authenticator } from './features/auth/auth.server';
 import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
 import { fetchMicroCmsClientConfig } from './features/publish/micro_cms_client_config_fetcher.server';
-import { initializeMicroCmsConfigCacheInstance } from './local_storage/micro_cms_config_cache.server';
 import stylesheet from './tailwind.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
-  {
-    // Initialize cache
-    initializeMicroCmsConfigCacheInstance();
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
+    return json({ microCmsConfig: null });
   }
 
-  const currentSession = await getSession(request.headers.get('Cookie'));
-  const { session, supabaseClient } = await createSupabaseServerClient(currentSession);
-  const userId = session?.get('userId');
-  if (session == null || supabaseClient == null || userId == null) {
-    return json({ microCmsClientConfig: null });
-  }
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
 
-  const microCmsClientConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId });
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
 
-  const responseInit: ResponseInit = {};
-  if (currentSession.get('accessToken') !== session.get('accessToken')) {
-    responseInit.headers = {
-      ['Set-Cookie']: await commitSession(session),
-    };
-  }
-
-  return json({ microCmsClientConfig }, responseInit);
+  return json({ microCmsConfig });
 };
 
 export default function App() {
-  const { microCmsClientConfig } = useLoaderData<typeof loader>();
+  const { microCmsConfig } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   const isSubmitting = state === 'submitting';
 
@@ -64,8 +51,8 @@ export default function App() {
     setAlertState(null);
   }, [setAlertState]);
 
-  if (microCmsClientConfig != null) {
-    setMicroCmsClientConfig(microCmsClientConfig);
+  if (microCmsConfig != null) {
+    setMicroCmsClientConfig(microCmsConfig);
   }
 
   return (
