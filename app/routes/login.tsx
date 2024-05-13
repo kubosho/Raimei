@@ -1,43 +1,22 @@
-import type { ActionFunctionArgs } from '@remix-run/node';
-import { Form, redirect } from '@remix-run/react';
+import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
+import { Form } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
 
-import { createSupabaseServerClient } from '../database/supabase_server_client.server';
-import { commitSession, getSession } from '../features/auth/cookie_session_storage.server';
 import Header from '../features/navigation/Header';
+import { authenticator } from '../features/auth/auth.server';
 
-export const action = async ({ request }: ActionFunctionArgs) => {
-  const formData = await request.formData();
-  const email = formData.get('email') as string;
-  const password = formData.get('password') as string;
-
-  const { supabaseClient } = await createSupabaseServerClient();
-  if (supabaseClient == null) {
-    return redirect('/login');
-  }
-
-  const session = await getSession(request.headers.get('Cookie'));
-  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
-  if (error != null) {
-    session.flash('error', error);
-
-    return redirect('/login', {
-      headers: {
-        'Set-Cookie': await commitSession(session),
-      },
-    });
-  }
-
-  session.set('accessToken', data.session.access_token);
-  session.set('refreshToken', data.session.refresh_token);
-  session.set('userId', data.user.id);
-
-  return redirect('/', {
-    headers: {
-      'Set-Cookie': await commitSession(session),
-    },
+export async function action({ request }: ActionFunctionArgs) {
+  return await authenticator.authenticate('form', request, {
+    successRedirect: '/',
+    failureRedirect: '/login',
   });
-};
+}
+
+export async function loader({ request }: LoaderFunctionArgs) {
+  return await authenticator.isAuthenticated(request, {
+    successRedirect: '/',
+  });
+}
 
 export const meta: MetaFunction = () => {
   return [{ title: 'Login — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
