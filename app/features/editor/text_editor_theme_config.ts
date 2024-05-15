@@ -11,5 +11,10 @@ export const textEditorThemeConfig: EditorThemeClasses = {
   },
   image: 'h-auto max-w-full rounded',
   link: 'active:text-blue-600 decoration-1 text-blue-900 underline visited:text-blue-900',
-  paragraph: 'leading-relaxed text-base',
+  list: {
+    ol: 'list-decimal mt-4',
+    ul: 'list-disc mt-4',
+  },
+  paragraph: 'leading-relaxed mt-4 text-base',
+  quote: `before:absolute before:content-['"'] before:left-2 before:text-4xl border-l-4 border-solid border-yellow-500 mt-4 pl-8 relative`,
 };
