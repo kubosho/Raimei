@@ -27,8 +27,8 @@ dependencies:
     specifier: ^0.13.1
     version: 0.13.1(lexical@0.13.1)(react-dom@18.3.0-canary-59831c98c-20240218)(react@18.3.0-canary-59831c98c-20240218)(yjs@13.6.12)
   '@lexical/rich-text':
-    specifier: ^0.13.1
-    version: 0.13.1(@lexical/clipboard@0.13.1)(@lexical/selection@0.13.1)(@lexical/utils@0.13.1)(lexical@0.13.1)
+    specifier: ^0.15.0
+    version: 0.15.0
   '@lexical/table':
     specifier: ^0.15.0
     version: 0.15.0
@@ -1130,6 +1130,16 @@ packages:
       lexical: 0.13.1
     dev: false
 
+  /@lexical/clipboard@0.15.0:
+    resolution: {integrity: sha512-binCltK7KiURQJFogvueYfmDNEKynN/lmZrCLFp2xBjEIajqw4WtOVLJZ33engdqNlvj0JqrxrWxbKG+yvUwrg==}
+    dependencies:
+      '@lexical/html': 0.15.0
+      '@lexical/list': 0.15.0
+      '@lexical/selection': 0.15.0
+      '@lexical/utils': 0.15.0
+      lexical: 0.15.0
+    dev: false
+
   /@lexical/code@0.13.1(lexical@0.13.1):
     resolution: {integrity: sha512-QK77r3QgEtJy96ahYXNgpve8EY64BQgBSnPDOuqVrLdl92nPzjqzlsko2OZldlrt7gjXcfl9nqfhZ/CAhStfOg==}
     peerDependencies:
@@ -1174,6 +1184,14 @@ packages:
       '@lexical/selection': 0.13.1(lexical@0.13.1)
       '@lexical/utils': 0.13.1(lexical@0.13.1)
       lexical: 0.13.1
+    dev: false
+
+  /@lexical/html@0.15.0:
+    resolution: {integrity: sha512-x/sfGvibwo8b5Vso4ppqNyS/fVve6Rn+TmvP/0eWOaa0I3aOQ57ulfcK6p/GTe+ZaEi8vW64oZPdi8XDgwSRaA==}
+    dependencies:
+      '@lexical/selection': 0.15.0
+      '@lexical/utils': 0.15.0
+      lexical: 0.15.0
     dev: false
 
   /@lexical/link@0.13.1(lexical@0.13.1):
@@ -1301,6 +1319,15 @@ packages:
       '@lexical/selection': 0.13.1(lexical@0.13.1)
       '@lexical/utils': 0.13.1(lexical@0.13.1)
       lexical: 0.13.1
+    dev: false
+
+  /@lexical/rich-text@0.15.0:
+    resolution: {integrity: sha512-76tXh/eeEOHl91HpFEXCc/tUiLrsa9RcSyvCzRZahk5zqYvQPXma/AUfRzuSMf2kLwDEoauKAVqNFQcbPhqwpQ==}
+    dependencies:
+      '@lexical/clipboard': 0.15.0
+      '@lexical/selection': 0.15.0
+      '@lexical/utils': 0.15.0
+      lexical: 0.15.0
     dev: false
 
   /@lexical/selection@0.13.1(lexical@0.13.1):
