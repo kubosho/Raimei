@@ -2,7 +2,7 @@ import { json } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs } from '@remix-run/node';
 import { Form, useActionData, useLoaderData } from '@remix-run/react';
 import type { MetaFunction } from '@remix-run/react';
-import { useAtomValue, useSetAtom } from 'jotai/react';
+import { useSetAtom } from 'jotai/react';
 import { useEffect } from 'react';
 
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
@@ -10,13 +10,24 @@ import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
-import { microCmsClientConfigAtom } from '../features/publish/atoms/micro_cms_client_config_atom';
+import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
+    return json({
+      hasSession: false,
+      microCmsConfig: null,
+    });
+  }
+
+  const supabaseClient = createSupabaseServerClient({ session: userData.session });
+
+  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
 
   return json({
-    hasSession: userData != null,
+    hasSession: true,
+    microCmsConfig,
   });
 };
 
@@ -63,9 +74,7 @@ export const meta: MetaFunction = () => {
 
 export default function SettingsMicroCms(): JSX.Element {
   const actionData = useActionData<typeof action>();
-  const { hasSession } = useLoaderData<typeof loader>();
-
-  const microCmsClientConfig = useAtomValue(microCmsClientConfigAtom);
+  const { hasSession, microCmsConfig } = useLoaderData<typeof loader>();
 
   const setAlertState = useSetAtom(alertStateAtom);
 
@@ -111,7 +120,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 type="text"
                 name="serviceId"
                 id="serviceId"
-                defaultValue={microCmsClientConfig?.serviceId}
+                defaultValue={microCmsConfig?.serviceId}
                 autoCapitalize="none"
               />
               <label className="mt-10" htmlFor="endpoint">
@@ -122,7 +131,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 type="text"
                 name="endpoint"
                 id="endpoint"
-                defaultValue={microCmsClientConfig?.endpoint}
+                defaultValue={microCmsConfig?.endpoint}
                 autoCapitalize="none"
                 autoCorrect="off"
               />
@@ -134,7 +143,7 @@ export default function SettingsMicroCms(): JSX.Element {
                 type="text"
                 name="apiKey"
                 id="apiKey"
-                defaultValue={microCmsClientConfig?.apiKey}
+                defaultValue={microCmsConfig?.apiKey}
                 autoCapitalize="none"
                 autoCorrect="off"
               />

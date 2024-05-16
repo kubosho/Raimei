@@ -1,59 +1,25 @@
-import type { LinksFunction, LoaderFunctionArgs } from '@remix-run/node';
-import {
-  Links,
-  LiveReload,
-  Meta,
-  Outlet,
-  Scripts,
-  ScrollRestoration,
-  json,
-  useLoaderData,
-  useNavigation,
-} from '@remix-run/react';
+import type { LinksFunction } from '@remix-run/node';
+import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
 import classNames from 'classnames';
-import { useAtom, useSetAtom } from 'jotai/react';
+import { useAtom } from 'jotai/react';
 import { useCallback } from 'react';
 
 import Alert from './components/Alert';
 import Loading from './components/Loading';
-import { createSupabaseServerClient } from './database/supabase_server_client.server';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
-import { authenticator } from './features/auth/auth.server';
-import { microCmsClientConfigAtom } from './features/publish/atoms/micro_cms_client_config_atom';
-import { fetchMicroCmsClientConfig } from './features/publish/micro_cms_client_config_fetcher.server';
 import stylesheet from './tailwind.css';
 
 export const links: LinksFunction = () => [{ rel: 'stylesheet', href: stylesheet }];
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userData = await authenticator.isAuthenticated(request);
-  if (userData == null) {
-    return json({ microCmsConfig: null });
-  }
-
-  const supabaseClient = createSupabaseServerClient({ session: userData.session });
-
-  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
-
-  return json({ microCmsConfig });
-};
-
 export default function App() {
-  const { microCmsConfig } = useLoaderData<typeof loader>();
   const { state } = useNavigation();
   const isSubmitting = state === 'submitting';
 
   const [alertState, setAlertState] = useAtom(alertStateAtom);
 
-  const setMicroCmsClientConfig = useSetAtom(microCmsClientConfigAtom);
-
   const handleClickCloseAlert = useCallback(() => {
     setAlertState(null);
   }, [setAlertState]);
-
-  if (microCmsConfig != null) {
-    setMicroCmsClientConfig(microCmsConfig);
-  }
 
   return (
     <html lang="ja">
