@@ -9,7 +9,7 @@ import { ClientOnly } from 'remix-utils/client-only';
 import { getCmsApiUrl } from '../external/cms/cms_api_url';
 import { createCmsContentsRepository } from '../external/cms/cms_contents_repository';
 import Loading from '../components/Loading';
-import { createSupabaseServerClient } from '../database/supabase_server_client.server';
+import { createSupabaseServerClient } from '../external/database/supabase_server_client.server';
 import { authenticator } from '../features/auth/auth.server';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
