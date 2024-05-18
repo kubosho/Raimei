@@ -1,7 +1,7 @@
 import type { Session, User, WeakPassword } from '@supabase/supabase-js';
 import { FormStrategy } from 'remix-auth-form';
 
-import { createSupabaseServerClient } from '../../external/database/supabase_server_client.server';
+import { createSupabaseServerClient } from '../../external_services/database/supabase_server_client.server';
 
 export interface UserData {
   user: User;

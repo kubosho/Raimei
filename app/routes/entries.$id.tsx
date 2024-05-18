@@ -6,10 +6,10 @@ import { useAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import { getCmsApiUrl } from '../external/cms/cms_api_url';
-import { createCmsContentsRepository } from '../external/cms/cms_contents_repository';
+import { getCmsApiUrl } from '../external_services/cms/cms_api_url';
+import { createCmsContentsRepository } from '../external_services/cms/cms_contents_repository';
 import Loading from '../components/Loading';
-import { createSupabaseServerClient } from '../external/database/supabase_server_client.server';
+import { createSupabaseServerClient } from '../external_services/database/supabase_server_client.server';
 import { authenticator } from '../features/auth/auth.server';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
