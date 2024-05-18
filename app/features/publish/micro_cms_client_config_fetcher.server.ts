@@ -1,6 +1,6 @@
 import type { SupabaseClient } from '@supabase/supabase-js';
 
-import type { Database } from '../../../types/database.types';
+import type { Database } from '../../../auto_generated_types/database.types';
 
 import type { MicroCmsClientConfig } from './types/micro_cms_client_config';
 
