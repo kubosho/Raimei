@@ -3,7 +3,7 @@ import { cleanup, getByRole, render } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, describe, expect, test } from 'vitest';
 
-import type { EditorStorageSchema } from '../../../../local_storage/editor_storage_schema.client';
+import type { EditorStorageSchema } from '../../../../global_objects/indexed_db/editor_storage_schema.client';
 import Editor from '../Editor';
 
 function noop() {}

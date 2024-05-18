@@ -18,8 +18,11 @@ import SubmitButton from '../features/editor/components/SubmitButton';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
-import { getEditorStorageInstance, initializeEditorStorageInstance } from '../local_storage/editor_storage.client';
-import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
+import {
+  getEditorStorageInstance,
+  initializeEditorStorageInstance,
+} from '../global_objects/indexed_db/editor_storage.client';
+import type { EditorStorageSchema } from '../global_objects/indexed_db/editor_storage_schema.client';
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);

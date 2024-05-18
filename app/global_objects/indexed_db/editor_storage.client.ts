@@ -1,7 +1,7 @@
 import { kvsEnvStorage } from '@kvs/env';
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
 
-import type { EditorStorageSchema } from '../local_storage/editor_storage_schema.client';
+import type { EditorStorageSchema } from './editor_storage_schema.client';
 
 type Storage = KvsEnvStorage<EditorStorageSchema>;
 
