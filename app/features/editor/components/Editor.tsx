@@ -1,14 +1,14 @@
-import CodePkg from '@lexical/code';
-import LinkPkg from '@lexical/link';
-import ListPkg from '@lexical/list';
-import LexicalMarkdownPkg from '@lexical/markdown';
-import RichTextPkg from '@lexical/rich-text';
-import LexicalComposerPkg from '@lexical/react/LexicalComposer.js';
-import type { InitialConfigType } from '@lexical/react/LexicalComposer.js';
-import ContentEditablePkg from '@lexical/react/LexicalContentEditable.js';
-import HistoryPluginPkg from '@lexical/react/LexicalHistoryPlugin.js';
-import MarkdownShortcutPluginPkg from '@lexical/react/LexicalMarkdownShortcutPlugin.js';
-import RichTextPluginPkg from '@lexical/react/LexicalRichTextPlugin.js';
+import { CodeNode } from '@lexical/code';
+import { LinkNode } from '@lexical/link';
+import { ListNode, ListItemNode } from '@lexical/list';
+import { $convertFromMarkdownString, TRANSFORMERS } from '@lexical/markdown';
+import { HeadingNode, QuoteNode } from '@lexical/rich-text';
+import { LexicalComposer } from '@lexical/react/LexicalComposer';
+import type { InitialConfigType } from '@lexical/react/LexicalComposer';
+import { ContentEditable } from '@lexical/react/LexicalContentEditable';
+import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
+import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import type { LexicalEditor } from 'lexical';
 import { useState } from 'react';
 import type { ChangeEvent } from 'react';
@@ -16,18 +16,6 @@ import type { ChangeEvent } from 'react';
 import AppErrorBoundary from '../../../components/AppErrorBoundary';
 import { MarkdownConverterPlugin } from '../plugins/MarkdownConverterPlugin';
 import { textEditorThemeConfig } from '../text_editor_theme_config';
-
-const { CodeNode } = CodePkg;
-const { LinkNode } = LinkPkg;
-const { ListNode, ListItemNode } = ListPkg;
-const { HeadingNode, QuoteNode } = RichTextPkg;
-
-const { ContentEditable } = ContentEditablePkg;
-const { HistoryPlugin } = HistoryPluginPkg;
-const { LexicalComposer } = LexicalComposerPkg;
-const { $convertFromMarkdownString, TRANSFORMERS } = LexicalMarkdownPkg;
-const { MarkdownShortcutPlugin } = MarkdownShortcutPluginPkg;
-const { RichTextPlugin } = RichTextPluginPkg;
 
 interface Props {
   title: string;
@@ -42,7 +30,7 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
   const [titleValue, setTitleValue] = useState(title);
   const [bodyValue, setBodyValue] = useState(body);
 
-  const initialConfig: InitialConfigType = {
+  const initialConfig: Readonly<InitialConfigType> = {
     editorState: bodyValue !== '' ? () => $convertFromMarkdownString(bodyValue, TRANSFORMERS) : null,
     namespace: 'RaimeiEditor',
     nodes: EDITOR_NODES,

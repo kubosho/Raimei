@@ -1,9 +1,6 @@
-import LexicalMarkdownPkg from '@lexical/markdown';
-import useLexicalComposerContextPkg from '@lexical/react/LexicalComposerContext.js';
+import { $convertToMarkdownString } from '@lexical/markdown';
+import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext';
 import { useEffect } from 'react';
-
-const { $convertToMarkdownString } = LexicalMarkdownPkg;
-const { useLexicalComposerContext } = useLexicalComposerContextPkg;
 
 interface Props {
   onChange: (markdown: string) => void;
