@@ -5,7 +5,7 @@ import { Link, useLoaderData } from '@remix-run/react';
 import { getCmsApiUrl } from '../cms/cms_api_url';
 import { createCmsContentsRepository } from '../cms/cms_contents_repository';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
-import type { EntryData } from '../entities/entry_data';
+import type { Entry } from '../entities/entry';
 import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
@@ -64,7 +64,7 @@ function LoggedOutIndex(): JSX.Element {
   );
 }
 
-function LoggedInIndex({ contents }: { contents: EntryData[] }): JSX.Element {
+function LoggedInIndex({ contents }: { contents: Entry[] }): JSX.Element {
   return (
     <>
       <Header>

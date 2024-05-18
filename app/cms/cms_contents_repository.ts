@@ -1,4 +1,4 @@
-import type { EntryData, EntrySchema } from '../entities/entry_data';
+import type { Entry, EntryApiFields } from '../entities/entry';
 
 import { API_KEY_HEADER } from './api_key_header';
 
@@ -24,13 +24,13 @@ export type CreateCmsContentsResponse = {
 };
 
 export type GetCmsContentsListResponse = {
-  contents: EntryData[];
+  contents: Entry[];
   totalCount: number;
   offset: number;
   limit: number;
 };
 
-export type GetCmsContentsResponse = EntryData;
+export type GetCmsContentsResponse = Entry;
 
 type CmsContentsResponse<T extends FetchCmsContentsOptions> = T['contentsId'] extends string | undefined
   ? GetCmsContentsResponse
@@ -43,7 +43,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
     this._options = options;
   }
 
-  async create(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse> {
+  async create(contents: EntryApiFields, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse> {
     const response = await fetch(this._options.apiUrl, {
       method: options.contentsId == null ? 'POST' : 'PUT',
       headers: {
@@ -73,7 +73,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
 }
 
 export interface CmsContentsRepository {
-  create(contents: EntrySchema, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
+  create(contents: EntryApiFields, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
   fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>>;
 }
 
