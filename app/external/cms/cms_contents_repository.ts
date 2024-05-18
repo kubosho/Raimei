@@ -1,6 +1,6 @@
-import type { Entry, EntryApiFields } from '../entities/entry';
+import type { Entry, EntryApiFields } from './entities/entry';
 
-import { API_KEY_HEADER } from './api_key_header';
+const API_KEY_HEADER = 'X-MICROCMS-API-KEY';
 
 export type CreateCmsContentsOptions = {
   abortSignal?: AbortSignal;

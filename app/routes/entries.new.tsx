@@ -6,8 +6,8 @@ import { useAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
-import { getCmsApiUrl } from '../cms/cms_api_url';
-import { createCmsContentsRepository } from '../cms/cms_contents_repository';
+import { getCmsApiUrl } from '../external/cms/cms_api_url';
+import { createCmsContentsRepository } from '../external/cms/cms_contents_repository';
 import Loading from '../components/Loading';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
 import { authenticator } from '../features/auth/auth.server';

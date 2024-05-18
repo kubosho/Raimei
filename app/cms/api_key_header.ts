@@ -1,1 +1,0 @@
-export const API_KEY_HEADER = 'X-MICROCMS-API-KEY';

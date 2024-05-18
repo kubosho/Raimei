@@ -1,9 +1,9 @@
 import { Factory } from 'fishery';
 
-import { resetMockDate, setMockDate } from '../../constants/mock_date';
-import type { AutomaticGrantFields } from '../../entities/microcms/automatic_grant_fields';
-import type { Entry, EntryApiFields } from '../../entities/entry';
-import type { Image } from '../../entities/microcms/image';
+import { resetMockDate, setMockDate } from '../../../constants/mock_date';
+import type { AutomaticGrantFields } from '../entities/microcms/automatic_grant_fields';
+import type { Entry, EntryApiFields } from '../entities/entry';
+import type { Image } from '../entities/microcms/image';
 
 export const imageFactory = Factory.define<Image>(({ sequence }) => {
   return {

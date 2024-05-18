@@ -3,8 +3,8 @@ type Params = {
   serviceId: string;
 };
 
-export const CMS_API_VERSION = 'v1' as const;
-export const CMS_DOMAIN = 'microcms.io' as const;
+const CMS_API_VERSION = 'v1' as const;
+const CMS_DOMAIN = 'microcms.io' as const;
 
 export function getCmsApiUrl({ endpoint, serviceId }: Params): string {
   const protocol = 'https://';

@@ -2,10 +2,10 @@ import { json } from '@remix-run/node';
 import type { LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { Link, useLoaderData } from '@remix-run/react';
 
-import { getCmsApiUrl } from '../cms/cms_api_url';
-import { createCmsContentsRepository } from '../cms/cms_contents_repository';
+import { getCmsApiUrl } from '../external/cms/cms_api_url';
+import { createCmsContentsRepository } from '../external/cms/cms_contents_repository';
 import { createSupabaseServerClient } from '../database/supabase_server_client.server';
-import type { Entry } from '../entities/entry';
+import type { Entry } from '../external/cms/entities/entry';
 import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
