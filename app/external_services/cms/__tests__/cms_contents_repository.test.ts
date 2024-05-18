@@ -2,7 +2,7 @@ import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { entryDataFactory, entrySchemaFactory } from '../__mock__/entry_data_factory';
+import { entryFactory, entryApiFieldsFactory } from '../__mock__/entry_factory';
 import { getCmsContentsListResponseFactory } from '../__mock__/get_cms_contents_list_response_factory';
 import { MOCK_API_KEY } from '../__mock__/mock_cms_api_key';
 import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mock__/mock_cms_api_params';
@@ -38,7 +38,7 @@ describe('CmsContentsRepository', () => {
 
     it('should fetch single contents from microCMS API', async () => {
       // Given
-      const entryData = entryDataFactory.build();
+      const entryData = entryFactory.build();
       const contentsResponse = entryData;
       server.use(
         http.get(`${CMS_API_URL}/${entryData.id}`, () => {
@@ -58,8 +58,8 @@ describe('CmsContentsRepository', () => {
   describe('#create', async () => {
     it('should create contents in microCMS', async () => {
       // Given
-      const contents = entrySchemaFactory.build();
-      const { id } = entryDataFactory.build();
+      const contents = entryApiFieldsFactory.build();
+      const { id } = entryFactory.build();
       const createContentsResponse = { id };
       server.use(
         http.post(CMS_API_URL, () => {

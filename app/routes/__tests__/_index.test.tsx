@@ -4,7 +4,7 @@ import { getByRole, render, waitFor } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 
-import { entryDataFactory } from '../../external_services/cms/__mock__/entry_data_factory';
+import { entryFactory } from '../../external_services/cms/__mock__/entry_factory';
 import Index from '../_index';
 
 const server = setupServer();
@@ -68,7 +68,7 @@ describe('Index', () => {
 
   test('it a session and microCMS data exist, a list of article titles is displayed', async () => {
     // Given
-    const contents = entryDataFactory.buildList(1);
+    const contents = entryFactory.buildList(1);
     const RemixStub = createRemixStub([
       {
         path: '/',
