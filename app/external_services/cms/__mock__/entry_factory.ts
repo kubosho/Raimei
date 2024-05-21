@@ -1,6 +1,6 @@
 import { Factory } from 'fishery';
 
-import { resetMockDate, setMockDate } from '../../../constants/mock_date';
+import { resetMockDate, setMockDate } from '../../../__mocks__/mock_date';
 import type { AutomaticGrantFields } from '../entities/microcms/automatic_grant_fields';
 import type { Entry, EntryApiFields } from '../entities/entry';
 import type { Image } from '../entities/microcms/image';
