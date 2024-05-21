@@ -4,7 +4,7 @@ import { getByRole, render, waitFor } from '@testing-library/react';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, test } from 'vitest';
 
-import { entryFactory } from '../../external_services/cms/__mock__/entry_factory';
+import { entryFactory } from '../../external_services/cms/__mocks__/entry_factory';
 import Index from '../_index';
 
 const server = setupServer();

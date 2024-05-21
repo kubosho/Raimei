@@ -2,10 +2,10 @@ import { HttpResponse, http } from 'msw';
 import { setupServer } from 'msw/node';
 import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest';
 
-import { entryFactory, entryApiFieldsFactory } from '../__mock__/entry_factory';
-import { getCmsContentsListResponseFactory } from '../__mock__/get_cms_contents_list_response_factory';
-import { MOCK_API_KEY } from '../__mock__/mock_cms_api_key';
-import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mock__/mock_cms_api_params';
+import { entryFactory, entryApiFieldsFactory } from '../__mocks__/entry_factory';
+import { getCmsContentsListResponseFactory } from '../__mocks__/get_cms_contents_list_response_factory';
+import { MOCK_API_KEY } from '../__mocks__/mock_cms_api_key';
+import { MOCK_CMS_API_ENDPOINT, MOCK_CMS_SERVICE_ID } from '../__mocks__/mock_cms_api_params';
 import { getCmsApiUrl } from '../cms_api_url';
 import { createCmsContentsRepository } from '../cms_contents_repository';
 
