@@ -1,8 +1,8 @@
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
 import { json } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useFetcher, useLoaderData } from '@remix-run/react';
-import { useAtom } from 'jotai/react';
+import { useActionData, useFetcher, useLoaderData } from '@remix-run/react';
+import { useAtom, useSetAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
 
@@ -10,6 +10,7 @@ import { getCmsApiUrl } from '../external_services/cms/cms_api_url';
 import { createCmsContentsRepository } from '../external_services/cms/cms_contents_repository';
 import Loading from '../components/Loading';
 import { createSupabaseServerClient } from '../external_services/database/supabase_server_client.server';
+import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { authenticator } from '../features/auth/auth.server';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
@@ -64,6 +65,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);
+
   return json({
     hasSession: userData != null,
   });
@@ -75,12 +77,15 @@ export const meta: MetaFunction = () => {
 
 export default function EntryNew() {
   const fetcher = useFetcher();
+  const actionData = useActionData<typeof action>();
   const { hasSession } = useLoaderData<typeof loader>();
 
   const [storage, setStorage] = useState<KvsEnvStorage<EditorStorageSchema> | null>(null);
 
   const [bodyValue, setBodyValue] = useAtom(bodyValueAtom);
   const [titleValue, setTitleValue] = useAtom(titleValueAtom);
+
+  const setAlertState = useSetAtom(alertStateAtom);
 
   const initializeEditorState = useCallback(async () => {
     await initializeEditorStorageInstance();
@@ -133,6 +138,17 @@ export default function EntryNew() {
   useEffect(() => {
     initializeEditorState();
   }, [initializeEditorState]);
+
+  useEffect(() => {
+    if (actionData == null) {
+      return;
+    }
+
+    setAlertState({
+      type: 'success',
+      message: 'Post created',
+    });
+  }, [actionData, setAlertState]);
 
   if (!hasSession) {
     return (
