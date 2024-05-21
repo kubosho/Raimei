@@ -21,10 +21,10 @@ describe('CmsContentsRepository', () => {
   describe('#fetch', async () => {
     it('should fetch contents from microCMS API', async () => {
       // Given
-      const contentsListResponse = getCmsContentsListResponseFactory.build();
+      const cmsContentsGetResponse = getCmsContentsListResponseFactory.build();
       server.use(
         http.get(CMS_API_URL, () => {
-          return HttpResponse.json(contentsListResponse);
+          return HttpResponse.json(cmsContentsGetResponse);
         }),
       );
 
@@ -33,7 +33,7 @@ describe('CmsContentsRepository', () => {
       const response = await repository?.fetch({});
 
       // Then
-      expect(response).toEqual(contentsListResponse);
+      expect(response).toEqual(cmsContentsGetResponse);
     });
 
     it('should fetch single contents from microCMS API', async () => {
