@@ -48,7 +48,7 @@ export const loader = async ({ params, request }: LoaderFunctionArgs) => {
       serviceId: microCmsConfig.serviceId,
     }),
   });
-  const contents = await repository.fetch({
+  const contents = await repository.get({
     contentsId: params.id,
   });
 

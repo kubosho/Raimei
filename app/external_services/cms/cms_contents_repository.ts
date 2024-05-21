@@ -2,13 +2,13 @@ import type { Entry, EntryApiFields } from './entities/entry';
 
 const API_KEY_HEADER = 'X-MICROCMS-API-KEY';
 
-export type CreateCmsContentsOptions = {
+export type CmsContentsCreateOptions = {
   abortSignal?: AbortSignal;
   contentsId?: string;
   headers?: HeadersInit;
 };
 
-export type FetchCmsContentsOptions = {
+export type CmsContentsGetOptions = {
   abortSignal?: AbortSignal;
   contentsId?: string;
   headers?: HeadersInit;
@@ -19,22 +19,26 @@ export type CmsContentsRepositoryOptions = {
   apiUrl: string;
 };
 
-export type CreateCmsContentsResponse = {
+export type CmsContentsCreateResponse = {
   id: string;
 };
 
-export type GetCmsContentsListResponse = {
+export type CmsContentsGetResponse = {
   contents: Entry[];
   totalCount: number;
   offset: number;
   limit: number;
 };
 
-export type GetCmsContentsResponse = Entry;
+export type CmsSingleContentsGetResponse = Entry;
 
-type CmsContentsResponse<T extends FetchCmsContentsOptions> = T['contentsId'] extends string | undefined
-  ? GetCmsContentsResponse
-  : GetCmsContentsListResponse;
+type CmsContentsResponse<T extends CmsContentsGetOptions> = T['contentsId'] extends string | undefined
+  ? CmsSingleContentsGetResponse
+  : CmsContentsGetResponse;
+export interface CmsContentsRepository {
+  create(contents: EntryApiFields, options: CmsContentsCreateOptions): Promise<CmsContentsCreateResponse>;
+  get<Options extends CmsContentsGetOptions>(options: Options): Promise<CmsContentsResponse<Options>>;
+}
 
 class CmsContentsRepositoryImpl implements CmsContentsRepository {
   private _options: CmsContentsRepositoryOptions;
@@ -43,7 +47,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
     this._options = options;
   }
 
-  async create(contents: EntryApiFields, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse> {
+  async create(contents: EntryApiFields, options: CmsContentsCreateOptions): Promise<CmsContentsCreateResponse> {
     const response = await fetch(this._options.apiUrl, {
       method: options.contentsId == null ? 'POST' : 'PUT',
       headers: {
@@ -58,7 +62,7 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
     return response.json();
   }
 
-  async fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>> {
+  async get<Options extends CmsContentsGetOptions>(options: Options): Promise<CmsContentsResponse<Options>> {
     const contentsId = options.contentsId == null ? '' : options.contentsId;
     const response = await fetch(`${this._options.apiUrl}/${contentsId}`, {
       headers: {
@@ -70,11 +74,6 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
 
     return response.json();
   }
-}
-
-export interface CmsContentsRepository {
-  create(contents: EntryApiFields, options: CreateCmsContentsOptions): Promise<CreateCmsContentsResponse>;
-  fetch<Options extends FetchCmsContentsOptions>(options: Options): Promise<CmsContentsResponse<Options>>;
 }
 
 export const createCmsContentsRepository = (options: CmsContentsRepositoryOptions): CmsContentsRepository =>

@@ -18,7 +18,7 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 describe('CmsContentsRepository', () => {
-  describe('#fetch', async () => {
+  describe('#get', async () => {
     it('should fetch contents from microCMS API', async () => {
       // Given
       const cmsContentsGetResponse = getCmsContentsListResponseFactory.build();
@@ -30,7 +30,7 @@ describe('CmsContentsRepository', () => {
 
       // When
       const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
-      const response = await repository?.fetch({});
+      const response = await repository?.get({});
 
       // Then
       expect(response).toEqual(cmsContentsGetResponse);
@@ -48,7 +48,7 @@ describe('CmsContentsRepository', () => {
 
       // When
       const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
-      const response = await repository?.fetch({ contentsId: entryData.id });
+      const response = await repository?.get({ contentsId: entryData.id });
 
       // Then
       expect(response).toEqual(contentsResponse);
