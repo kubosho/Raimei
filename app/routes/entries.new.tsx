@@ -1,7 +1,7 @@
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
-import { json } from '@remix-run/node';
+import { redirect } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useActionData, useFetcher, useLoaderData } from '@remix-run/react';
+import { useActionData, useFetcher } from '@remix-run/react';
 import { useAtom, useSetAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
@@ -16,7 +16,6 @@ import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import Editor from '../features/editor/components/Editor';
 import SubmitButton from '../features/editor/components/SubmitButton';
-import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
 import {
@@ -24,6 +23,15 @@ import {
   initializeEditorStorageInstance,
 } from '../global_objects/indexed_db/editor_storage.client';
 import type { EditorStorageSchema } from '../global_objects/indexed_db/editor_storage_schema.client';
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const userData = await authenticator.isAuthenticated(request);
+  if (userData == null) {
+    return redirect('/login');
+  }
+
+  return null;
+};
 
 export const action = async ({ request }: ActionFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);
@@ -63,14 +71,6 @@ export const action = async ({ request }: ActionFunctionArgs) => {
   return res;
 };
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const userData = await authenticator.isAuthenticated(request);
-
-  return json({
-    hasSession: userData != null,
-  });
-};
-
 export const meta: MetaFunction = () => {
   return [{ title: 'New entry — Raimei' }, { name: 'description', content: 'Raimei is My blog editor.' }];
 };
@@ -78,7 +78,6 @@ export const meta: MetaFunction = () => {
 export default function EntryNew() {
   const fetcher = useFetcher();
   const actionData = useActionData<typeof action>();
-  const { hasSession } = useLoaderData<typeof loader>();
 
   const [storage, setStorage] = useState<KvsEnvStorage<EditorStorageSchema> | null>(null);
 
@@ -149,19 +148,6 @@ export default function EntryNew() {
       message: 'Post created',
     });
   }, [actionData, setAlertState]);
-
-  if (!hasSession) {
-    return (
-      <>
-        <Header>
-          <AccountMenu hasSession={false} />
-        </Header>
-        <main>
-          <p className="max-w-screen-md mx-auto pb-16 px-2">You need to sign in to create a new entry.</p>
-        </main>
-      </>
-    );
-  }
 
   return (
     <>
