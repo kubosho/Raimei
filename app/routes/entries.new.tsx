@@ -17,7 +17,7 @@ import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import Editor from '../features/editor/components/Editor';
 import SubmitButton from '../features/editor/components/SubmitButton';
 import Header from '../features/navigation/Header';
-import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
+import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher.server';
 import {
   getEditorStorageInstance,
   initializeEditorStorageInstance,
@@ -41,7 +41,7 @@ export const action = async ({ request }: ActionFunctionArgs) => {
 
   const supabaseClient = createSupabaseServerClient({ session: userData.session });
 
-  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  const microCmsConfig = await fetchMicroCmsConfig({ supabaseClient, userId: userData.user.id });
   if (microCmsConfig == null) {
     return null;
   }

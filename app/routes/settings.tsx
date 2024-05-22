@@ -10,7 +10,7 @@ import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { authenticator } from '../features/auth/auth.server';
 import AccountMenu from '../features/navigation/AccountMenu';
 import Header from '../features/navigation/Header';
-import { fetchMicroCmsClientConfig } from '../features/publish/micro_cms_client_config_fetcher.server';
+import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher.server';
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);
@@ -20,7 +20,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const supabaseClient = createSupabaseServerClient({ session: userData.session });
 
-  const microCmsConfig = await fetchMicroCmsClientConfig({ supabaseClient, userId: userData.user.id });
+  const microCmsConfig = await fetchMicroCmsConfig({ supabaseClient, userId: userData.user.id });
 
   return json({
     hasSession: true,

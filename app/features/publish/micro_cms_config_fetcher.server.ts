@@ -2,17 +2,14 @@ import type { SupabaseClient } from '@supabase/supabase-js';
 
 import type { Database } from '../../../auto_generated_types/database.types';
 
-import type { MicroCmsClientConfig } from './types/micro_cms_client_config';
+import type { MicroCmsConfig } from './types/micro_cms_config';
 
 interface Params {
   supabaseClient: SupabaseClient<Database>;
   userId: string;
 }
 
-export async function fetchMicroCmsClientConfig({
-  supabaseClient,
-  userId,
-}: Params): Promise<MicroCmsClientConfig | null> {
+export async function fetchMicroCmsConfig({ supabaseClient, userId }: Params): Promise<MicroCmsConfig | null> {
   const { data } = await supabaseClient.from('micro_cms_configs').select();
   if (data == null) {
     return null;
