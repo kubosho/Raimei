@@ -105,23 +105,15 @@ export default function EntryNew() {
   const handleChangeTitle = useCallback(
     (value: string) => {
       setTitleValue(value);
-
-      if (storage != null) {
-        storage.set('new', { title: value, body: bodyValue });
-      }
     },
-    [bodyValue, setTitleValue, storage],
+    [setTitleValue],
   );
 
   const handleChangeBody = useCallback(
     (value: string) => {
       setBodyValue(value);
-
-      if (storage != null) {
-        storage.set('new', { title: titleValue, body: value });
-      }
     },
-    [setBodyValue, storage, titleValue],
+    [setBodyValue],
   );
 
   const handleClickSubmitButton = useCallback(async () => {
@@ -137,6 +129,12 @@ export default function EntryNew() {
   useEffect(() => {
     initializeEditorState();
   }, [initializeEditorState]);
+
+  useEffect(() => {
+    if (storage != null) {
+      storage.set('new', { title: titleValue, body: bodyValue });
+    }
+  }, [bodyValue, storage, titleValue]);
 
   useEffect(() => {
     if (actionData == null) {
