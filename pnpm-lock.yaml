@@ -92,8 +92,8 @@ devDependencies:
     specifier: ^2.7.2
     version: 2.7.2(react-dom@18.3.0-canary-59831c98c-20240218)(react@18.3.0-canary-59831c98c-20240218)(typescript@5.3.3)
   '@testing-library/jest-dom':
-    specifier: ^6.4.2
-    version: 6.4.2(vitest@1.3.1)
+    specifier: ^6.4.5
+    version: 6.4.5(vitest@1.3.1)
   '@testing-library/react':
     specifier: ^14.2.2
     version: 14.2.2(react-dom@18.3.0-canary-59831c98c-20240218)(react@18.3.0-canary-59831c98c-20240218)
@@ -1912,8 +1912,8 @@ packages:
       pretty-format: 27.5.1
     dev: true
 
-  /@testing-library/jest-dom@6.4.2(vitest@1.3.1):
-    resolution: {integrity: sha512-CzqH0AFymEMG48CpzXFriYYkOjk6ZGPCLMhW9e9jg3KMCn5OfJecF8GtGW7yGfR/IgCe3SX8BSwjdzI6BBbZLw==}
+  /@testing-library/jest-dom@6.4.5(vitest@1.3.1):
+    resolution: {integrity: sha512-AguB9yvTXmCnySBP1lWjfNNUwpbElsaQ567lt2VdGqAdHtpieLgjmcVyv1q7PMIvLbgpDdkWV5Ydv3FEejyp2A==}
     engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
     peerDependencies:
       '@jest/globals': '>= 28'
