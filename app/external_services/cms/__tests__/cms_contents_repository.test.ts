@@ -74,5 +74,26 @@ describe('CmsContentsRepository', () => {
       // Then
       expect(response).toEqual(createContentsResponse);
     });
+
+    it('should create contents in microCMS with contentsId', async () => {
+      // Given
+      const contentsId = 'example';
+      const contents = entryApiFieldsFactory.build();
+      const entryApiFields = entryApiFieldsFactory.build({ slug: contentsId });
+      const { id } = entryFactory.build(entryApiFields);
+      const createContentsResponse = { id };
+      server.use(
+        http.put(`${CMS_API_URL}/${contentsId}`, () => {
+          return HttpResponse.json(createContentsResponse);
+        }),
+      );
+
+      // When
+      const repository = createCmsContentsRepository({ apiKey: MOCK_API_KEY, apiUrl: CMS_API_URL });
+      const response = await repository?.create(contents, { contentsId });
+
+      // Then
+      expect(response).toEqual(createContentsResponse);
+    });
   });
 });
