@@ -14,7 +14,9 @@ describe('Editor', () => {
   describe('Title', () => {
     test('a label is associated with an input', () => {
       // When
-      const { getByLabelText } = render(<Editor title="" body="" onChangeTitle={noop} onChangeBody={noop} />);
+      const { getByLabelText } = render(
+        <Editor title="" body="" slug="" onChangeTitle={noop} onChangeBody={noop} onChangeSlug={noop} />,
+      );
 
       // Then
       expect(getByLabelText('Entry title')).toHaveAttribute('id', 'entry-title');
@@ -31,9 +33,11 @@ describe('Editor', () => {
         version: 1,
       });
       const onChangeTitle = (value: string) => {
-        storage.set(storageKey, { title: value, body: '' });
+        storage.set(storageKey, { title: value, body: '', slug: '' });
       };
-      const { container } = render(<Editor title="" body="" onChangeTitle={onChangeTitle} onChangeBody={noop} />);
+      const { container } = render(
+        <Editor title="" body="" slug="" onChangeTitle={onChangeTitle} onChangeBody={noop} onChangeSlug={noop} />,
+      );
       const titleInput = getByRole(container, 'textbox', { name: 'Entry title' });
 
       // When
