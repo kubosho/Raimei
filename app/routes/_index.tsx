@@ -23,8 +23,8 @@ function LoggedOutIndex(): JSX.Element {
     <>
       <Header useHeading={false} />
       <main className="flex items-center mx-2">
-        <div className="bg-yellow-50 border border-yellow-500 flex items-center justify-between max-w-screen-md mx-auto rounded px-8 py-10 w-full">
-          <h1 className="flex font-thin items-center text-4xl">Just Writing.</h1>
+        <div className="bg-yellow-50 border border-yellow-500 flex items-center justify-between max-w-screen-md mt-8 mx-auto rounded px-8 py-10 w-full">
+          <h1 className="font-thin text-4xl">Just Writing.</h1>
           <Link className="bg-yellow-500 px-4 py-2 rounded text-slate-900" to={{ pathname: '/login' }}>
             Login
           </Link>
