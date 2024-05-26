@@ -27,9 +27,9 @@ export default function Login() {
     <>
       <Header useHeading={false} />
       <main>
-        <section className="max-w-screen-md mx-auto px-2">
-          <h1 className="leading-relaxed text-3xl">Login</h1>
-          <div className="bg-yellow-50 border border-yellow-500 max-w-screen-md mt-8 mx-auto rounded px-8 py-10">
+        <section className="bg-yellow-50 border border-yellow-500 max-w-screen-md mt-8 mx-auto rounded px-8 py-10">
+          <h1 className="font-thin text-4xl">Login</h1>
+          <div className="mt-8">
             <LoginForm action="/login" />
           </div>
         </section>
