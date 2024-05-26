@@ -1,7 +1,9 @@
+import { randomBytes } from 'crypto';
+
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
-import { redirect } from '@remix-run/node';
+import { json, redirect } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
-import { useActionData, useFetcher } from '@remix-run/react';
+import { useFetcher, useLoaderData } from '@remix-run/react';
 import { useAtom, useSetAtom } from 'jotai/react';
 import { useCallback, useEffect, useState } from 'react';
 import { ClientOnly } from 'remix-utils/client-only';
@@ -14,6 +16,7 @@ import { alertStateAtom } from '../features/alert/atoms/alert_state_atom';
 import { authenticator } from '../features/auth/auth.server';
 import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
+import { slugValueAtom } from '../features/editor/atoms/slug_value_atom';
 import Editor from '../features/editor/components/Editor';
 import SubmitButton from '../features/editor/components/SubmitButton';
 import Header from '../features/navigation/Header';
@@ -24,13 +27,23 @@ import {
 } from '../global_objects/indexed_db/editor_storage.client';
 import type { EditorStorageSchema } from '../global_objects/indexed_db/editor_storage_schema.client';
 
+const chars = 'abcdefghijklmnopqrstuvwxyz234567'.split('');
+
+function generateRandomString(length: number): string {
+  return randomBytes(length).reduce((p, i) => p + chars[i % 32], '');
+}
+
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const userData = await authenticator.isAuthenticated(request);
   if (userData == null) {
     return redirect('/login');
   }
 
-  return null;
+  const randomString = generateRandomString(8);
+
+  return json({
+    randomString,
+  });
 };
 
 export const action = async ({ request }: ActionFunctionArgs) => {
@@ -65,7 +78,9 @@ export const action = async ({ request }: ActionFunctionArgs) => {
       body: contents,
       slug,
     },
-    {},
+    {
+      contentsId: slug,
+    },
   );
 
   return res;
@@ -77,12 +92,13 @@ export const meta: MetaFunction = () => {
 
 export default function EntryNew() {
   const fetcher = useFetcher();
-  const actionData = useActionData<typeof action>();
+  const { randomString } = useLoaderData<typeof loader>();
 
   const [storage, setStorage] = useState<KvsEnvStorage<EditorStorageSchema> | null>(null);
 
-  const [bodyValue, setBodyValue] = useAtom(bodyValueAtom);
   const [titleValue, setTitleValue] = useAtom(titleValueAtom);
+  const [bodyValue, setBodyValue] = useAtom(bodyValueAtom);
+  const [slugValue, setSlugValue] = useAtom(slugValueAtom);
 
   const setAlertState = useSetAtom(alertStateAtom);
 
@@ -95,49 +111,65 @@ export default function EntryNew() {
     if (value != null) {
       setBodyValue(value.body);
       setTitleValue(value.title);
+      setSlugValue(value.slug);
     } else {
-      storage?.set('new', { title: '', body: '' });
+      storage?.set('new', { title: '', body: '', slug: randomString });
     }
 
     setStorage(storage);
-  }, [setBodyValue, setTitleValue]);
+  }, [randomString, setBodyValue, setSlugValue, setTitleValue]);
+
+  const saveStorage = useCallback(
+    (newData: Partial<Record<'title' | 'body' | 'slug', string>>) => {
+      const data = { title: titleValue, body: bodyValue, slug: slugValue };
+      if (storage != null) {
+        storage.set('new', { ...data, ...newData });
+      }
+    },
+    [bodyValue, slugValue, storage, titleValue],
+  );
 
   const handleChangeTitle = useCallback(
     (value: string) => {
       setTitleValue(value);
+      saveStorage({ title: value });
     },
-    [setTitleValue],
+    [saveStorage, setTitleValue],
   );
 
   const handleChangeBody = useCallback(
     (value: string) => {
       setBodyValue(value);
+      saveStorage({ body: value });
     },
-    [setBodyValue],
+    [saveStorage, setBodyValue],
+  );
+
+  const handleChangeSlug = useCallback(
+    (value: string) => {
+      setSlugValue(value);
+      saveStorage({ slug: value });
+    },
+    [saveStorage, setSlugValue],
   );
 
   const handleClickSubmitButton = useCallback(async () => {
     fetcher.submit(
       {
-        contents: bodyValue,
         title: titleValue,
+        contents: bodyValue,
+        slug: slugValue,
       },
       { method: 'POST' },
     );
-  }, [bodyValue, fetcher, titleValue]);
+  }, [bodyValue, fetcher, slugValue, titleValue]);
 
   useEffect(() => {
     initializeEditorState();
   }, [initializeEditorState]);
 
   useEffect(() => {
-    if (storage != null) {
-      storage.set('new', { title: titleValue, body: bodyValue });
-    }
-  }, [bodyValue, storage, titleValue]);
-
-  useEffect(() => {
-    if (actionData == null) {
+    if (fetcher.data == null) {
       return;
     }
 
@@ -145,7 +177,7 @@ export default function EntryNew() {
       type: 'success',
       message: 'Post created',
     });
-  }, [actionData, setAlertState]);
+  }, [fetcher.data, setAlertState]);
 
   return (
     <>
@@ -159,8 +191,10 @@ export default function EntryNew() {
               <Editor
                 title={titleValue}
                 body={bodyValue}
+                slug={slugValue}
                 onChangeBody={handleChangeBody}
                 onChangeTitle={handleChangeTitle}
+                onChangeSlug={handleChangeSlug}
               />
             ) : (
               <></>

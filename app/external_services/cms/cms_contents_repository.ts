@@ -48,7 +48,8 @@ class CmsContentsRepositoryImpl implements CmsContentsRepository {
   }
 
   async create(contents: EntryApiFields, options: CmsContentsCreateOptions): Promise<CmsContentsCreateResponse> {
-    const response = await fetch(this._options.apiUrl, {
+    const contentsId = options.contentsId == null ? '' : options.contentsId;
+    const response = await fetch(`${this._options.apiUrl}/${contentsId}`, {
       method: options.contentsId == null ? 'POST' : 'PUT',
       headers: {
         'Content-Type': 'application/json',

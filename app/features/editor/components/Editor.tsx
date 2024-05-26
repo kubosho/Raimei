@@ -9,6 +9,7 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
+import { Button, Flex, Popover, TextField } from '@radix-ui/themes';
 import type { LexicalEditor } from 'lexical';
 import { useState } from 'react';
 import type { ChangeEvent } from 'react';
@@ -20,15 +21,18 @@ import { textEditorThemeConfig } from '../text_editor_theme_config';
 interface Props {
   title: string;
   body: string;
+  slug: string;
   onChangeTitle: (title: string) => void;
   onChangeBody: (body: string) => void;
+  onChangeSlug: (body: string) => void;
 }
 
 const EDITOR_NODES = [CodeNode, HeadingNode, LinkNode, ListNode, ListItemNode, QuoteNode];
 
-export default function Editor({ title, body, onChangeTitle, onChangeBody }: Props): JSX.Element {
+export default function Editor({ title, body, slug, onChangeTitle, onChangeBody, onChangeSlug }: Props): JSX.Element {
   const [titleValue, setTitleValue] = useState(title);
   const [bodyValue, setBodyValue] = useState(body);
+  const [slugValue, setSlugValue] = useState(slug);
 
   const initialConfig: Readonly<InitialConfigType> = {
     editorState: bodyValue !== '' ? () => $convertFromMarkdownString(bodyValue, TRANSFORMERS) : null,
@@ -44,6 +48,12 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
     const { value } = target;
     setTitleValue(value);
     onChangeTitle(value);
+  };
+
+  const handleChangeSlug = ({ target }: ChangeEvent<HTMLInputElement>) => {
+    const { value } = target;
+    setSlugValue(value);
+    onChangeSlug(value);
   };
 
   const handleChangeBody = (value: string) => {
@@ -65,6 +75,27 @@ export default function Editor({ title, body, onChangeTitle, onChangeBody }: Pro
         placeholder="Write the title"
         onChange={handleChangeTitle}
       />
+
+      <Popover.Root>
+        <Popover.Trigger>
+          <Flex>
+            <label className="text-gray-900" htmlFor="entry-link-trigger">
+              Entry link
+            </label>
+            <Button name="entry-link-trigger" id="entry-link-trigger">
+              {slugValue}
+            </Button>
+          </Flex>
+        </Popover.Trigger>
+
+        <Popover.Content>
+          <Flex>
+            <TextField.Root defaultValue={slugValue} placeholder="" onChange={handleChangeSlug}>
+              <TextField.Slot />
+            </TextField.Root>
+          </Flex>
+        </Popover.Content>
+      </Popover.Root>
 
       <AppErrorBoundary>
         <div className="mt-10">
