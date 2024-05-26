@@ -9,12 +9,12 @@ import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 
-import tailwindStyleSheet from './tailwind.css';
 import radixUIStyleSheet from '@radix-ui/themes/styles.css';
+import tailwindStyleSheet from './tailwind.css';
 
 export const links: LinksFunction = () => [
-  { rel: 'stylesheet', href: tailwindStyleSheet },
   { rel: 'stylesheet', href: radixUIStyleSheet },
+  { rel: 'stylesheet', href: tailwindStyleSheet },
 ];
 
 export default function App() {
