@@ -9,7 +9,7 @@ import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
 import { MarkdownShortcutPlugin } from '@lexical/react/LexicalMarkdownShortcutPlugin';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
-import { Button, Flex, Popover, TextField } from '@radix-ui/themes';
+import { Button, Popover, TextField } from '@radix-ui/themes';
 import type { LexicalEditor } from 'lexical';
 import { useState } from 'react';
 import type { ChangeEvent } from 'react';
@@ -78,22 +78,18 @@ export default function Editor({ title, body, slug, onChangeTitle, onChangeBody,
 
       <Popover.Root>
         <Popover.Trigger>
-          <Flex>
+          <div className="flex items-center">
             <label className="text-gray-900" htmlFor="entry-link-trigger">
               Entry link
             </label>
-            <Button name="entry-link-trigger" id="entry-link-trigger">
+            <Button name="entry-link-trigger" id="entry-link-trigger" className="ml-2">
               {slugValue}
             </Button>
-          </Flex>
+          </div>
         </Popover.Trigger>
 
         <Popover.Content>
-          <Flex>
-            <TextField.Root defaultValue={slugValue} placeholder="" onChange={handleChangeSlug}>
-              <TextField.Slot />
-            </TextField.Root>
-          </Flex>
+          <TextField.Root defaultValue={slugValue} placeholder="" onChange={handleChangeSlug} />
         </Popover.Content>
       </Popover.Root>
 
