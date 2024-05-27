@@ -1,6 +1,6 @@
 import { Theme } from '@radix-ui/themes';
 import type { LinksFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
 import classNames from 'classnames';
 import { useAtom } from 'jotai/react';
 import { useCallback } from 'react';
@@ -9,8 +9,8 @@ import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 
-import radixUIStyleSheet from '@radix-ui/themes/styles.css';
-import tailwindStyleSheet from './tailwind.css';
+import radixUIStyleSheet from '@radix-ui/themes/styles.css?url';
+import tailwindStyleSheet from './tailwind.css?url';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: radixUIStyleSheet },
@@ -62,7 +62,6 @@ export default function App() {
           </div>
           <ScrollRestoration />
           <Scripts />
-          <LiveReload />
         </Theme>
       </body>
     </html>
