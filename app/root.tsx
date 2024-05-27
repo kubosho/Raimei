@@ -9,8 +9,8 @@ import Alert from './components/Alert';
 import Loading from './components/Loading';
 import { alertStateAtom } from './features/alert/atoms/alert_state_atom';
 
-import radixUIStyleSheet from '@radix-ui/themes/styles.css';
-import tailwindStyleSheet from './tailwind.css';
+import radixUIStyleSheet from '@radix-ui/themes/styles.css?url';
+import tailwindStyleSheet from './tailwind.css?url';
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: radixUIStyleSheet },
