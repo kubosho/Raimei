@@ -1,6 +1,7 @@
 import { randomBytes } from 'crypto';
 
 import type { KvsEnvStorage } from '@kvs/env/lib/share';
+import { Button } from '@radix-ui/themes';
 import { json, redirect } from '@remix-run/node';
 import type { ActionFunctionArgs, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useFetcher, useLoaderData } from '@remix-run/react';
@@ -18,7 +19,6 @@ import { bodyValueAtom } from '../features/editor/atoms/body_value_atom';
 import { titleValueAtom } from '../features/editor/atoms/title_value_atom';
 import { slugValueAtom } from '../features/editor/atoms/slug_value_atom';
 import Editor from '../features/editor/components/Editor';
-import SubmitButton from '../features/editor/components/SubmitButton';
 import Header from '../features/navigation/Header';
 import { fetchMicroCmsConfig } from '../features/publish/micro_cms_config_fetcher.server';
 import {
@@ -182,9 +182,11 @@ export default function EntryNew() {
   return (
     <>
       <Header>
-        <SubmitButton onClick={handleClickSubmitButton} />
+        <Button type="button" onClick={handleClickSubmitButton}>
+          Submit
+        </Button>
       </Header>
-      <main className="pb-16">
+      <main className="mt-8 pb-16">
         <ClientOnly fallback={<Loading />}>
           {() =>
             storage != null ? (
