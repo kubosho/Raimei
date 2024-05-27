@@ -1,6 +1,6 @@
 import { Theme } from '@radix-ui/themes';
 import type { LinksFunction } from '@remix-run/node';
-import { Links, LiveReload, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
+import { Links, Meta, Outlet, Scripts, ScrollRestoration, useNavigation } from '@remix-run/react';
 import classNames from 'classnames';
 import { useAtom } from 'jotai/react';
 import { useCallback } from 'react';
@@ -62,7 +62,6 @@ export default function App() {
           </div>
           <ScrollRestoration />
           <Scripts />
-          <LiveReload />
         </Theme>
       </body>
     </html>
