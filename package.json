@@ -31,7 +31,7 @@
     "@supabase/supabase-js": "^2.43.3",
     "classnames": "^2.5.1",
     "isbot": "^5.1.6",
-    "jotai": "^2.6.5",
+    "jotai": "^2.8.2",
     "lexical": "^0.15.0",
     "react": "canary",
     "react-dom": "canary",
