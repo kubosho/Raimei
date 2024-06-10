@@ -17,7 +17,7 @@
     "@isaacs/ttlcache": "^1.4.1",
     "@kvs/env": "^2.2.0",
     "@lexical/code": "^0.15.0",
-    "@lexical/link": "^0.15.0",
+    "@lexical/link": "^0.16.0",
     "@lexical/list": "^0.15.0",
     "@lexical/markdown": "^0.15.0",
     "@lexical/react": "^0.16.0",
